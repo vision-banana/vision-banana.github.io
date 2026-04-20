@@ -451,6 +451,14 @@
             text-align: center;
         }
 
+        .section > h2 {
+            font-size: 1.8rem;
+            margin: 48px 0 24px 0;
+            color: #0f172a;
+            font-weight: 700;
+            text-align: center;
+        }
+
         .tl-dr {
             display: flex;
             justify-content: center;
@@ -747,6 +755,171 @@
                     </div>
                 </div>
 
+                <h2>3D Understanding from Monocular Images</h2>
+
+                <h3>Monocular Metric Depth Estimation</h3>
+
+                <div class="examples-carousel" id="depth-carousel">
+                    <button class="carousel-nav prev" id="depth-carousel-prev" aria-label="Previous example">‹</button>
+                    <button class="carousel-nav next" id="depth-carousel-next" aria-label="Next example">›</button>
+
+                    <div class="example active">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="depth-container-1">
+                                <img src="files/images/depth/depth_3_0.png" alt="Before image">
+                                <div class="ba-after" id="depth-after-1">
+                                    <img id="depth-after-img-1" src="files/images/depth/depth_3_1.png" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-controls">
+                                <label for="depth-range-1">Slide to visualize the depth map <span id="depth-percentage-1">50%</span></label>
+                                <input id="depth-range-1" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="depth-container-2">
+                                <img src="files/images/depth/depth_15_0.png" alt="Before image">
+                                <div class="ba-after" id="depth-after-2">
+                                    <img id="depth-after-img-2" src="files/images/depth/depth_15_1.png" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-controls">
+                                <label for="depth-range-2">Slide to visualize the depth map <span id="depth-percentage-2">50%</span></label>
+                                <input id="depth-range-2" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="depth-container-3">
+                                <img src="files/images/depth/depth_18_0.png" alt="Before image">
+                                <div class="ba-after" id="depth-after-3">
+                                    <img id="depth-after-img-3" src="files/images/depth/depth_18_1.png" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-controls">
+                                <label for="depth-range-3">Slide to visualize the depth map <span id="depth-percentage-3">50%</span></label>
+                                <input id="depth-range-3" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="depth-container-4">
+                                <img src="files/images/depth/depth_162_0.png" alt="Before image">
+                                <div class="ba-after" id="depth-after-4">
+                                    <img id="depth-after-img-4" src="files/images/depth/depth_162_1.png" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-controls">
+                                <label for="depth-range-4">Slide to visualize the depth map <span id="depth-percentage-4">50%</span></label>
+                                <input id="depth-range-4" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="depth-container-5">
+                                <img src="files/images/depth/depth_eth3d_47_0.jpg" alt="Before image">
+                                <div class="ba-after" id="depth-after-5">
+                                    <img id="depth-after-img-5" src="files/images/depth/depth_eth3d_47_1.jpg" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-controls">
+                                <label for="depth-range-5">Slide to visualize the depth map <span id="depth-percentage-5">50%</span></label>
+                                <input id="depth-range-5" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="depth-container-6">
+                                <img src="files/images/depth/depth_eth3d_205_0.jpeg" alt="Before image">
+                                <div class="ba-after" id="depth-after-6">
+                                    <img id="depth-after-img-6" src="files/images/depth/depth_eth3d_205_1.png" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-controls">
+                                <label for="depth-range-6">Slide to visualize the depth map <span id="depth-percentage-6">50%</span></label>
+                                <input id="depth-range-6" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-dots" id="depth-dots">
+                        <div class="dot active" data-example="0"></div>
+                        <div class="dot" data-example="1"></div>
+                        <div class="dot" data-example="2"></div>
+                        <div class="dot" data-example="3"></div>
+                        <div class="dot" data-example="4"></div>
+                        <div class="dot" data-example="5"></div>
+                    </div>
+                </div>
+
+                <h3>Surface Normal Estimation</h3>
+
+                <div class="examples-carousel" id="normal-carousel">
+                    <button class="carousel-nav prev" id="normal-carousel-prev" aria-label="Previous example">‹</button>
+                    <button class="carousel-nav next" id="normal-carousel-next" aria-label="Next example">›</button>
+
+                    <div class="example active">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="normal-container-1">
+                                <img src="files/images/normal/sn_1_in.jpg" alt="Before image">
+                                <div class="ba-after" id="normal-after-1">
+                                    <img id="normal-after-img-1" src="files/images/normal/sn_1_out.jpg" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-controls">
+                                <label for="normal-range-1">Slide to visualize the normal map <span id="normal-percentage-1">50%</span></label>
+                                <input id="normal-range-1" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="normal-container-2">
+                                <img src="files/images/normal/sn_2_in.jpg" alt="Before image">
+                                <div class="ba-after" id="normal-after-2">
+                                    <img id="normal-after-img-2" src="files/images/normal/sn_2_out.jpg" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-controls">
+                                <label for="normal-range-2">Slide to visualize the normal map <span id="normal-percentage-2">50%</span></label>
+                                <input id="normal-range-2" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="normal-container-3">
+                                <img src="files/images/normal/sn_4_in.jpg" alt="Before image">
+                                <div class="ba-after" id="normal-after-3">
+                                    <img id="normal-after-img-3" src="files/images/normal/sn_4_out.png" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-controls">
+                                <label for="normal-range-3">Slide to visualize the normal map <span id="normal-percentage-3">50%</span></label>
+                                <input id="normal-range-3" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-dots" id="normal-dots">
+                        <div class="dot active" data-example="0"></div>
+                        <div class="dot" data-example="1"></div>
+                        <div class="dot" data-example="2"></div>
+                    </div>
+                </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Example 1 variables
@@ -993,6 +1166,96 @@
             refsegDots.forEach(dot => {
                 dot.addEventListener('click', () => {
                     switchRefsegExample(parseInt(dot.dataset.example));
+                });
+            });
+
+            // Depth Estimation Carousel
+            const depthCarousel = document.getElementById('depth-carousel');
+            const depthExamples = depthCarousel.querySelectorAll('.example');
+            const depthDots = document.querySelectorAll('#depth-dots .dot');
+            const depthPrevBtn = document.getElementById('depth-carousel-prev');
+            const depthNextBtn = document.getElementById('depth-carousel-next');
+            let currentDepthExample = 0;
+
+            function switchDepthExample(index) {
+                depthExamples.forEach(ex => ex.classList.remove('active'));
+                depthExamples[index].classList.add('active');
+                depthDots.forEach(dot => dot.classList.remove('active'));
+                depthDots[index].classList.add('active');
+                currentDepthExample = index;
+            }
+
+            // Setup event listeners for each depth estimation example
+            for (let i = 1; i <= 6; i++) {
+                const range = document.getElementById(`depth-range-${i}`);
+                const percentage = document.getElementById(`depth-percentage-${i}`);
+                const after = document.getElementById(`depth-after-${i}`);
+
+                if (range) {
+                    range.addEventListener('input', function (event) {
+                        updatePosition(event.target.value, after, percentage);
+                    });
+                }
+
+                updatePosition(50, after, percentage);
+            }
+
+            depthPrevBtn.addEventListener('click', () => {
+                switchDepthExample((currentDepthExample - 1 + depthExamples.length) % depthExamples.length);
+            });
+
+            depthNextBtn.addEventListener('click', () => {
+                switchDepthExample((currentDepthExample + 1) % depthExamples.length);
+            });
+
+            depthDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    switchDepthExample(parseInt(dot.dataset.example));
+                });
+            });
+
+            // Surface Normal Estimation Carousel
+            const normalCarousel = document.getElementById('normal-carousel');
+            const normalExamples = normalCarousel.querySelectorAll('.example');
+            const normalDots = document.querySelectorAll('#normal-dots .dot');
+            const normalPrevBtn = document.getElementById('normal-carousel-prev');
+            const normalNextBtn = document.getElementById('normal-carousel-next');
+            let currentNormalExample = 0;
+
+            function switchNormalExample(index) {
+                normalExamples.forEach(ex => ex.classList.remove('active'));
+                normalExamples[index].classList.add('active');
+                normalDots.forEach(dot => dot.classList.remove('active'));
+                normalDots[index].classList.add('active');
+                currentNormalExample = index;
+            }
+
+            // Setup event listeners for each surface normal example
+            for (let i = 1; i <= 3; i++) {
+                const range = document.getElementById(`normal-range-${i}`);
+                const percentage = document.getElementById(`normal-percentage-${i}`);
+                const after = document.getElementById(`normal-after-${i}`);
+
+                if (range) {
+                    range.addEventListener('input', function (event) {
+                        updatePosition(event.target.value, after, percentage);
+                    });
+                }
+
+                updatePosition(50, after, percentage);
+            }
+
+            normalPrevBtn.addEventListener('click', () => {
+                switchNormalExample((currentNormalExample - 1 + normalExamples.length) % normalExamples.length);
+            });
+
+            normalNextBtn.addEventListener('click', () => {
+                switchNormalExample((currentNormalExample + 1) % normalExamples.length);
+            });
+
+            normalDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    switchNormalExample(parseInt(dot.dataset.example));
                 });
             });
         });
