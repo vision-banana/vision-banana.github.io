@@ -668,7 +668,84 @@
                         <div class="dot" data-example="2"></div>
                     </div>
                 </div>
-    </main>
+
+                <h3>Referring Expression Segmentation</h3>
+
+                <div class="examples-carousel" id="refseg-carousel">
+                    <button class="carousel-nav prev" id="refseg-carousel-prev" aria-label="Previous example">‹</button>
+                    <button class="carousel-nav next" id="refseg-carousel-next" aria-label="Next example">›</button>
+
+                    <div class="example active">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="refseg-container-2">
+                                <img src="files/images/refseg/refseg3.jpeg" alt="Before image">
+                                <div class="ba-after" id="refseg-after-2">
+                                    <img id="refseg-after-img-2" src="files/images/refseg/refseg3_pred.jpg" alt="After image">
+                                </div>
+                            </div>
+                            <div id="refseg-prompt-2" class="ba-prompt"><strong>Prompt:</strong> A segmentation map image. The stretching cat is rendered in green, the cat that is cleaning itself is in cyan.</div>
+                            <div class="ba-controls">
+                                <label for="refseg-range-2">Slide to visualize the mask <span id="refseg-percentage-2">50%</span></label>
+                                <input id="refseg-range-2" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="refseg-container-3">
+                                <img src="files/images/refseg/refseg4_in.png" alt="Before image">
+                                <div class="ba-after" id="refseg-after-3">
+                                    <img id="refseg-after-img-3" src="files/images/refseg/refseg_4_pred1.png" alt="After image">
+                                </div>
+                            </div>
+                            <div id="refseg-prompt-3" class="ba-prompt"><strong>Prompt:</strong> This image shows segmentation masks from the given image. The background is black color. The game control device is represented by a solid yellow.</div>
+                            <div class="ba-controls">
+                                <label for="refseg-range-3">Slide to visualize the mask <span id="refseg-percentage-3">50%</span></label>
+                                <input id="refseg-range-3" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="refseg-container-4">
+                                <img src="files/images/refseg/refseg5_in.png" alt="Before image">
+                                <div class="ba-after" id="refseg-after-4">
+                                    <img id="refseg-after-img-4" src="files/images/refseg/refseg5_out.png" alt="After image">
+                                </div>
+                            </div>
+                            <div id="refseg-prompt-4" class="ba-prompt"><strong>Prompt:</strong> This image shows segmentation masks from the given image. The background is black color. The chef's names in both Chinese and English are rendered as cyan color.</div>
+                            <div class="ba-controls">
+                                <label for="refseg-range-4">Slide to visualize the mask <span id="refseg-percentage-4">50%</span></label>
+                                <input id="refseg-range-4" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="refseg-container-1">
+                                <img src="files/images/refseg/refseg1.jpeg" alt="Before image">
+                                <div class="ba-after" id="refseg-after-1">
+                                    <img id="refseg-after-img-1" src="files/images/refseg/refseg1_pred.png" alt="After image">
+                                </div>
+                            </div>
+                            <div id="refseg-prompt-1" class="ba-prompt"><strong>Prompt:</strong> A segmentation map image. The area that corresponds to the man in pink t shirt is rendered solid white; the other man is rendered in green.</div>
+                            <div class="ba-controls">
+                                <label for="refseg-range-1">Slide to visualize the mask <span id="refseg-percentage-1">50%</span></label>
+                                <input id="refseg-range-1" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-dots" id="refseg-dots">
+                        <div class="dot active" data-example="0"></div>
+                        <div class="dot" data-example="1"></div>
+                        <div class="dot" data-example="2"></div>
+                        <div class="dot" data-example="3"></div>
+                    </div>
+                </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -871,6 +948,51 @@
             inssegDots.forEach(dot => {
                 dot.addEventListener('click', () => {
                     switchInssegExample(parseInt(dot.dataset.example));
+                });
+            });
+
+            // Referring Expression Segmentation Carousel
+            const refsegCarousel = document.getElementById('refseg-carousel');
+            const refsegExamples = refsegCarousel.querySelectorAll('.example');
+            const refsegDots = document.querySelectorAll('#refseg-dots .dot');
+            const refsegPrevBtn = document.getElementById('refseg-carousel-prev');
+            const refsegNextBtn = document.getElementById('refseg-carousel-next');
+            let currentRefsegExample = 0;
+
+            function switchRefsegExample(index) {
+                refsegExamples.forEach(ex => ex.classList.remove('active'));
+                refsegExamples[index].classList.add('active');
+                refsegDots.forEach(dot => dot.classList.remove('active'));
+                refsegDots[index].classList.add('active');
+                currentRefsegExample = index;
+            }
+
+            // Setup event listeners for each Referring Expression segmentation example
+            for (let i = 1; i <= 4; i++) {
+                const range = document.getElementById(`refseg-range-${i}`);
+                const percentage = document.getElementById(`refseg-percentage-${i}`);
+                const after = document.getElementById(`refseg-after-${i}`);
+
+                if (range) {
+                    range.addEventListener('input', function (event) {
+                        updatePosition(event.target.value, after, percentage);
+                    });
+                }
+
+                updatePosition(50, after, percentage);
+            }
+
+            refsegPrevBtn.addEventListener('click', () => {
+                switchRefsegExample((currentRefsegExample - 1 + refsegExamples.length) % refsegExamples.length);
+            });
+
+            refsegNextBtn.addEventListener('click', () => {
+                switchRefsegExample((currentRefsegExample + 1) % refsegExamples.length);
+            });
+
+            refsegDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    switchRefsegExample(parseInt(dot.dataset.example));
                 });
             });
         });
