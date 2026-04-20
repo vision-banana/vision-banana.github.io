@@ -595,8 +595,79 @@
                         <div class="dot" data-example="1"></div>
                     </div>
                 </div>
-            </div>
-        </section>
+
+                <h3>Instance Segmentation</h3>
+
+                <div class="examples-carousel" id="insseg-carousel">
+                    <button class="carousel-nav prev" id="insseg-carousel-prev" aria-label="Previous example">‹</button>
+                    <button class="carousel-nav next" id="insseg-carousel-next" aria-label="Next example">›</button>
+
+                    <div class="example active">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="insseg-container-1">
+                                <img src="files/images/insseg/insseg1.jpg" alt="Before image">
+                                <div class="ba-after" id="insseg-after-1">
+                                    <img id="insseg-after-img-1" src="files/images/insseg/insseg1_1.png" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-prompt-selector">
+                                <button class="ba-prompt-btn insseg-prompt-btn-1 active" data-prompt="1">Prompt 1</button>
+                                <button class="ba-prompt-btn insseg-prompt-btn-1" data-prompt="2">Prompt 2</button>
+                            </div>
+                            <div id="insseg-prompt-1" class="ba-prompt"><strong>Prompt:</strong> Generate an instance segmentation visualization of this image. Each price tag is colored differently.</div>
+                            <div class="ba-controls">
+                                <label for="insseg-range-1">Slide to visualize the mask <span id="insseg-percentage-1">50%</span></label>
+                                <input id="insseg-range-1" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="insseg-container-2">
+                                <img src="files/images/insseg/insseg2.jpg" alt="Before image">
+                                <div class="ba-after" id="insseg-after-2">
+                                    <img id="insseg-after-img-2" src="files/images/insseg/insseg2_1.png" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-prompt-selector">
+                                <button class="ba-prompt-btn insseg-prompt-btn-2 active" data-prompt="1">Prompt 1</button>
+                                <button class="ba-prompt-btn insseg-prompt-btn-2" data-prompt="2">Prompt 2</button>
+                            </div>
+                            <div id="insseg-prompt-2" class="ba-prompt"><strong>Prompt:</strong> Generate an instance segmentation visualization of this image. Each piece of garlic is colored differently.</div>
+                            <div class="ba-controls">
+                                <label for="insseg-range-2">Slide to visualize the mask <span id="insseg-percentage-2">50%</span></label>
+                                <input id="insseg-range-2" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <div class="before-after" aria-label="Before after slider">
+                            <div class="ba-container" id="insseg-container-3">
+                                <img src="files/images/insseg/insseg3.png" alt="Before image">
+                                <div class="ba-after" id="insseg-after-3">
+                                    <img id="insseg-after-img-3" src="files/images/insseg/insseg3_1.png" alt="After image">
+                                </div>
+                            </div>
+                            <div class="ba-prompt-selector">
+                                <button class="ba-prompt-btn insseg-prompt-btn-3 active" data-prompt="1">Prompt 1</button>
+                                <button class="ba-prompt-btn insseg-prompt-btn-3" data-prompt="2">Prompt 2</button>
+                            </div>
+                            <div id="insseg-prompt-3" class="ba-prompt"><strong>Prompt:</strong> This image shows segmentation masks for the basketballs from the input image. The background is set to #10aa05. Each basketball instance is represented by a solid circular mask, and a different color is used for each mask.</div>
+                            <div class="ba-controls">
+                                <label for="insseg-range-3">Slide to visualize the mask <span id="insseg-percentage-3">50%</span></label>
+                                <input id="insseg-range-3" type="range" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-dots" id="insseg-dots">
+                        <div class="dot active" data-example="0"></div>
+                        <div class="dot" data-example="1"></div>
+                        <div class="dot" data-example="2"></div>
+                    </div>
+                </div>
     </main>
 
     <script>
@@ -620,8 +691,9 @@
             const promptBtns2 = document.querySelectorAll('.ba-prompt-selector-2 .ba-prompt-btn-2');
 
             // Carousel variables
-            const examples = document.querySelectorAll('.example');
-            const dots = document.querySelectorAll('.dot');
+            const semsegCarousel = document.querySelector('.examples-carousel');
+            const examples = semsegCarousel.querySelectorAll('.example');
+            const dots = semsegCarousel.querySelectorAll('.carousel-dots .dot');
             const prevBtn = document.getElementById('carousel-prev');
             const nextBtn = document.getElementById('carousel-next');
             let currentExample = 0;
@@ -656,8 +728,13 @@
             function switchPrompt(promptNum, afterImg, promptDiv, promptBtns, promptsObj) {
                 afterImg.src = promptsObj[promptNum].image;
                 promptDiv.innerHTML = '<strong>Prompt:</strong> ' + promptsObj[promptNum].text;
-                promptBtns.forEach(btn => btn.classList.remove('active'));
-                document.querySelector(`[data-prompt="${promptNum}"]`).classList.add('active');
+                promptBtns.forEach(btn => {
+                    if (btn.dataset.prompt == promptNum) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
             }
 
             function switchExample(index) {
@@ -707,6 +784,95 @@
 
             updatePosition(50, after, percentage);
             updatePosition(50, after2, percentage2);
+
+            // Instance Segmentation Carousel
+            const inssegCarousel = document.getElementById('insseg-carousel');
+            const inssegExamples = inssegCarousel.querySelectorAll('.example');
+            const inssegDots = document.querySelectorAll('#insseg-dots .dot');
+            const inssegPrevBtn = document.getElementById('insseg-carousel-prev');
+            const inssegNextBtn = document.getElementById('insseg-carousel-next');
+            let currentInssegExample = 0;
+
+            const inssegPrompts = {
+                1: {
+                    1: {
+                        image: 'files/images/insseg/insseg1_1.png',
+                        text: 'Generate an instance segmentation visualization of this image. Each price tag is colored differently.'
+                    },
+                    2: {
+                        image: 'files/images/insseg/insseg1_2.png',
+                        text: 'This image is a segmentation task derived from the input. The "crescent"-shaped croissant instances are each represented by a unique, solid color. Background is RGB(88, 50, 82).'
+                    }
+                },
+                2: {
+                    1: {
+                        image: 'files/images/insseg/insseg2_1.png',
+                        text: 'Generate an instance segmentation visualization of this image. Each piece of garlic is colored differently.'
+                    },
+                    2: {
+                        image: 'files/images/insseg/insseg2_2.png',
+                        text: 'Generate an instance segmentation visualization of this image.  Each piece of beef is colored differently.'
+                    }
+                },
+                3: {
+                    1: {
+                        image: 'files/images/insseg/insseg3_1.png',
+                        text: 'This image shows segmentation masks for the basketballs from the input image. The background is set to #10aa05. Each basketball instance is represented by a solid circular mask, and a different color is used for each mask.'
+                    },
+                    2: {
+                        image: 'files/images/insseg/insseg3_2.png',
+                        text: 'This image shows segmentation masks for the balls from the input image. The background is set to white color. Each ball is represented by a different color.'
+                    }
+                }
+            };
+
+            function switchInssegExample(index) {
+                inssegExamples.forEach(ex => ex.classList.remove('active'));
+                inssegExamples[index].classList.add('active');
+                inssegDots.forEach(dot => dot.classList.remove('active'));
+                inssegDots[index].classList.add('active');
+                currentInssegExample = index;
+            }
+
+            // Setup event listeners for each instance segmentation example
+            for (let i = 1; i <= 3; i++) {
+                (function(index) {
+                    const range = document.getElementById(`insseg-range-${index}`);
+                    const percentage = document.getElementById(`insseg-percentage-${index}`);
+                    const after = document.getElementById(`insseg-after-${index}`);
+                    const afterImg = document.getElementById(`insseg-after-img-${index}`);
+                    const promptDiv = document.getElementById(`insseg-prompt-${index}`);
+                    const promptBtns = document.querySelectorAll(`.insseg-prompt-btn-${index}`);
+
+                    if (range) {
+                        range.addEventListener('input', function (event) {
+                            updatePosition(event.target.value, after, percentage);
+                        });
+                    }
+
+                    promptBtns.forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            switchPrompt(this.dataset.prompt, afterImg, promptDiv, promptBtns, inssegPrompts[index]);
+                        });
+                    });
+
+                    updatePosition(50, after, percentage);
+                })(i);
+            }
+
+            inssegPrevBtn.addEventListener('click', () => {
+                switchInssegExample((currentInssegExample - 1 + inssegExamples.length) % inssegExamples.length);
+            });
+
+            inssegNextBtn.addEventListener('click', () => {
+                switchInssegExample((currentInssegExample + 1) % inssegExamples.length);
+            });
+
+            inssegDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    switchInssegExample(parseInt(dot.dataset.example));
+                });
+            });
         });
     </script>
 </body>
