@@ -509,6 +509,119 @@
             color: #334155;
             margin: 0;
         }
+.results-table {
+        border-collapse: collapse;
+        font-family: serif;
+        text-align: center;
+        margin-bottom: 1em;
+        width: 100%;
+        max-width: 900px;
+    }
+    .results-table th, .results-table td {
+        border: 0.5px solid black;
+        padding: 2px;
+    }
+    .results-table th {
+        font-weight: bold;
+    }
+    .ref-text {
+        font-size: 0.7em;
+        color: blue;
+        font-weight: normal;
+        display: block;
+    }
+    .col-header {
+        text-align: center;
+    }
+    .row-header {
+        text-align: left;
+        font-weight: bold;
+    }
+    .green-bold {
+        color: #008000;
+        font-weight: bold;
+    }
+    .green-italic {
+        color: #008000;
+        font-style: italic;
+    }
+    .notes {
+        font-family: serif;
+        font-size: 0.9em;
+        line-height: 1.4;
+        max-width: 900px;
+        margin-bottom: 1em;
+    }
+    .caption {
+        font-family: serif;
+        font-size: 1.05em;
+        line-height: 1.4;
+        max-width: 900px;
+    }
+
+  h2 {
+    font-size: 24px;
+    color: #333333;
+    margin-bottom: 16px;
+    font-weight: bold;
+  }
+
+  .bibtex-wrapper {
+    position: relative;
+    background: rgba(255, 247, 205, 0.95);
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+    justify-content: center;
+  }
+
+  pre {
+    margin: 0;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    color: #333333;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.4;
+  } */
+
+  .copy-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .copy-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: #b0b0b0;
+    transition: stroke 0.2s ease;
+  }
+
+  .copy-btn:hover svg {
+    stroke: #666666;
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 32px;
+    color: #666666;
+    font-size: 16px;
+  }
+
+  .footer img {
+    height: 20px;
+    opacity: 0.8;
+  }
     </style>
 </head>
 <body>
@@ -537,9 +650,9 @@
             <div class="section">
                 <div class="tl-dr">TL;DR</div>
                 <ul class="summary">
+                    <li>Nano Banana Pro outperforms SAM 3 and Depth Anything 3 after instruction tuning.</li>
                     <li>Image generation pretraining behaves as a generalist vision learner, analogous to next-token prediction for LLMs.</li>
                     <li>Image generation can serve as a universal interface for diverse vision tasks.</li>
-                    <li>Nano Banana Pro outperforms SAM 3 and Depth Anything 3 after instruction tuning.</li>
                 </ul>
                 <div class="teaser-container">
                     <img src="files/images/teaser_img_v6.png" alt="Teaser Image" style="width: 100%; height: auto; display: block;">
@@ -550,13 +663,215 @@
                     <p>Recent works show that image and video generators exhibit zero-shot visual understanding behaviors, in a way reminiscent of how Large Language Models (LLMs) develop emergent capabilities of language understanding and reasoning from generative pretraining. While it has long been conjectured that the ability to create visual content implies an ability to understand it, there has been limited evidence that generative vision models have developed strong understanding capabilities. In this work, we demonstrate that image generation training serves a role similar to LLM pretraining, and lets models learn powerful and general visual representations that enable <strong>state-of-the-art</strong> performance on various vision tasks. We introduce <em>Vision Banana</em>, a generalist model built by instruction-tuning <em>Nano Banana Pro</em> (NBP) on a mixture of its original training data alongside a small amount of vision task data. By parameterizing the output space of vision tasks as RGB images, we seamlessly reframe perception as image generation. Our generalist model, <em>Vision Banana</em>, achieves state-of-the-art results on a variety of vision tasks involving both 2D and 3D understanding, beating or rivaling zero-shot domain-specialists, including the <em>Segment Anything</em> series on segmentation tasks, and the <em>Depth Anything</em> series on metric depth estimation. We show that these results can be achieved with lightweight instruction-tuning without sacrificing the base model's image generation capabilities. The superior results suggest that image generation pretraining is a generalist vision learner. It also shows that image generation serves as a unified and universal interface for vision tasks, similar to text generation's role in language understanding and reasoning. We could be witnessing a major paradigm shift for computer vision, where generative vision pretraining takes a central role in building Foundational Vision Models for both generation and understanding.</p>
                 </div>
 
+<h2>2D Semantic Understanding</h2>
+<table style="width: 100%; border-collapse: collapse; font-family: 'Times New Roman', serif; font-size: 14px;">
+  <tr>
+    <caption style="text-align: justify; margin-bottom: 15px; caption-side: top; line-height: 1.4;">
+    <strong>Table </strong> | Vision-Banana compared with state-of-the-art methods on various segmentation datasets. We mainly compare with other methods that have not been trained on in-domain data, i.e., the training splits of these benchmarks. We denote them as “Zero-Shot Transfer” in the table. The usage of this term follows <a href="https://ai.meta.com/research/publications/segment-anything/" style="color: blue; text-decoration: none;">Segment Anything (Kirillov et al., 2023)</a> and <a href="https://arxiv.org/abs/2103.00020" style="color: blue; text-decoration: none;">CLIP (Radford et al., 2021)</a>. Non zero-shot transfer methods are marked in <span style="color: gray;">gray</span>. <sup>*</sup>: On SA-Co/Gold, we evaluate our method on 500 randomly sampled queries. On ReasonSeg, methods are paired with multimodal LLMs for the reasoning part. We use Gemini 2.5 Pro in our case.
+  </caption>
+    <!-- Table (a) Cityscapes val. -->
+    <td style="vertical-align: top; padding-right: 15px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-top: 1.5px solid black; border-bottom: 1px solid black;">
+            <th style="padding: 4px; text-align: left; font-weight: normal;">Model</th>
+            <th style="padding: 4px; text-align: right; font-weight: normal;">mIoU</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2" style="padding: 4px; color: gray; font-style: italic;">Non Zero-Shot Transfer</td>
+          </tr>
+          <tr style="color: gray;">
+            <td style="padding: 4px;">SegMan-L</td>
+            <td style="padding: 4px; text-align: right;"><strong>0.842</strong></td>
+          </tr>
+          <tr style="border-top: 1px solid black;">
+            <td colspan="2" style="padding: 4px; font-style: italic;">Zero-Shot Transfer</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">APE-D</td>
+            <td style="padding: 4px; text-align: right;">0.442</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">OpenSeeD</td>
+            <td style="padding: 4px; text-align: right;">0.478</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">X-Decoder</td>
+            <td style="padding: 4px; text-align: right;">0.520</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">SAM 3</td>
+            <td style="padding: 4px; text-align: right;">0.652</td>
+          </tr>
+          <tr style="border-bottom: 1.5px solid black;">
+            <td style="padding: 4px;">Vision Banana</td>
+            <td style="padding: 4px; text-align: right; color: green;"><strong>0.699</strong></td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding: 6px 0;"><strong>(a)</strong> Cityscapes val.</td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+
+    <!-- Table (b) SA-Co/Gold. -->
+    <td style="vertical-align: top; padding-right: 15px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-top: 1.5px solid black; border-bottom: 1px solid black;">
+            <th style="padding: 4px; text-align: left; font-weight: normal;">Model</th>
+            <th style="padding: 4px; text-align: right; font-weight: normal;">pmF1</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2" style="padding: 4px; color: gray; font-style: italic;">Non Zero-Shot Transfer</td>
+          </tr>
+          <tr style="color: gray;">
+            <td style="padding: 4px;">SAM 3</td>
+            <td style="padding: 4px; text-align: right;"><strong>0.661</strong></td>
+          </tr>
+          <tr style="border-top: 1px solid black;">
+            <td colspan="2" style="padding: 4px; font-style: italic;">Zero-Shot Transfer</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">APE-D</td>
+            <td style="padding: 4px; text-align: right;">0.369</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">OWLv2</td>
+            <td style="padding: 4px; text-align: right;">0.420</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">Gemini 2.5</td>
+            <td style="padding: 4px; text-align: right;">0.461</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">DINO-X</td>
+            <td style="padding: 4px; text-align: right; color: green;"><strong>0.552</strong></td>
+          </tr>
+          <tr style="border-bottom: 1.5px solid black;">
+            <td style="padding: 4px;">Vision Banana</td>
+            <td style="padding: 4px; text-align: right;">0.540*</td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding: 6px 0;"><strong>(b)</strong> SA-Co/Gold.</td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+
+    <!-- Table (c) RefCOCOg val (U). -->
+    <td style="vertical-align: top; padding-right: 15px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-top: 1.5px solid black; border-bottom: 1px solid black;">
+            <th style="padding: 4px; text-align: left; font-weight: normal;">Model</th>
+            <th style="padding: 4px; text-align: right; font-weight: normal;">cIoU</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2" style="padding: 4px; color: gray; font-style: italic;">Non Zero-Shot Transfer</td>
+          </tr>
+          <tr style="color: gray;">
+            <td style="padding: 4px;">HyperSeg + Phi2 2.7B</td>
+            <td style="padding: 4px; text-align: right;">0.794</td>
+          </tr>
+          <tr style="color: gray;">
+            <td style="padding: 4px;">X-SAM + Phi3 3.8B</td>
+            <td style="padding: 4px; text-align: right;"><strong>0.838</strong></td>
+          </tr>
+          <tr style="border-top: 1px solid black;">
+            <td colspan="2" style="padding: 4px; font-style: italic;">Zero-Shot Transfer</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">HybridGL</td>
+            <td style="padding: 4px; text-align: right;">0.513</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">Kang et al. + LLaVA-1.5 13B</td>
+            <td style="padding: 4px; text-align: right;">0.677</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">SAM 3 + Gemini 2.5 Pro</td>
+            <td style="padding: 4px; text-align: right;">0.734</td>
+          </tr>
+          <tr style="border-bottom: 1.5px solid black;">
+            <td style="padding: 4px;">Vision Banana</td>
+            <td style="padding: 4px; text-align: right; color: green;"><strong>0.738</strong></td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding: 6px 0;"><strong>(c)</strong> RefCOCOg val (U).</td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+
+    <!-- Table (d) ReasonSeg val. -->
+    <td style="vertical-align: top;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-top: 1.5px solid black; border-bottom: 1px solid black;">
+            <th style="padding: 4px; text-align: left; font-weight: normal;">Model</th>
+            <th style="padding: 4px; text-align: left; font-weight: normal;">MLLM</th>
+            <th style="padding: 4px; text-align: right; font-weight: normal;">gIoU</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="3" style="padding: 4px; color: gray; font-style: italic;">Non Zero-Shot Transfer</td>
+          </tr>
+          <tr style="color: gray;">
+            <td style="padding: 4px;">X-SAM</td>
+            <td style="padding: 4px;">Phi-3-3.8B</td>
+            <td style="padding: 4px; text-align: right;">0.566</td>
+          </tr>
+          <tr style="color: gray;">
+            <td style="padding: 4px;">LISA-13B-LLaVA1.5</td>
+            <td style="padding: 4px;">-</td>
+            <td style="padding: 4px; text-align: right;">0.650</td>
+          </tr>
+          <tr style="border-top: 1px solid black;">
+            <td colspan="3" style="padding: 4px; font-style: italic;">Zero-Shot Transfer</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">SegZero</td>
+            <td style="padding: 4px;">Qwen2.5-VL 7B</td>
+            <td style="padding: 4px; text-align: right;">0.626</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">RSVP</td>
+            <td style="padding: 4px;">GPT-4o</td>
+            <td style="padding: 4px; text-align: right;">0.647</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px;">SAM 3 Agent</td>
+            <td style="padding: 4px;">Gemini 2.5 Pro</td>
+            <td style="padding: 4px; text-align: right;">0.770</td>
+          </tr>
+          <tr style="border-bottom: 1.5px solid black;">
+            <td style="padding: 4px;">Vision Banana</td>
+            <td style="padding: 4px;">Gemini 2.5 Pro</td>
+            <td style="padding: 4px; text-align: right; color: green;"><strong>0.793</strong></td>
+          </tr>
+          <tr>
+            <td colspan="3" style="padding: 6px 0;"><strong>(d)</strong> ReasonSeg val.</td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+</table>
+
                 <div class="examples-carousel">
                     <button class="carousel-nav prev" id="carousel-prev" aria-label="Previous example">‹</button>
                     <button class="carousel-nav next" id="carousel-next" aria-label="Next example">›</button>
 
                     <div class="example active">
                         <div class="before-after" aria-label="Before after slider">
-                            <h2>2D Semantic Understanding</h2>
                             <h3>Semantic Segmentation</h3>
                             <div class="ba-container" id="ba-container">
                                 <img src="files/images/semseg/img1.jpg" alt="Before image">
@@ -578,7 +893,6 @@
 
                     <div class="example">
                         <div class="before-after" aria-label="Before after slider">
-                            <h2>2D Semantic Understanding</h2>
                             <h3>Semantic Segmentation</h3>
                             <div class="ba-container" id="ba-container-2">
                                 <img src="files/images/semseg/img2.jpg" alt="Before image">
@@ -756,8 +1070,187 @@
                 </div>
 
                 <h2>3D Understanding from Monocular Images</h2>
-
                 <h3>Monocular Metric Depth Estimation</h3>
+                <table class="results-table">
+    <thead>
+        <tr>
+            <th colspan="2"></th>
+            <th class="col-header">DepthLM-7B<span class="ref-text">(Cai et al., 2025)</span></th>
+            <th class="col-header">Depth Any. v3<span class="ref-text">(Lin et al., 2025)</span></th>
+            <th class="col-header">Depth Pro<span class="ref-text">(Bochkovskii et al., 2024)</span></th>
+            <th class="col-header">UniK3D<span class="ref-text">(Piccinelli et al., 2025a)</span></th>
+            <th class="col-header">MoGe-2<span class="ref-text">(Wang et al., 2025c)</span></th>
+            <th class="col-header">Vision<br>Banana 🍌</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan="2" class="row-header">Camera<br>Intrinsics</td>
+            <td class="row-header">Inference</td>
+            <td>&#10003;</td>
+            <td>&#10003;</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Training</td>
+            <td>&#10003;</td>
+            <td>&#10003;</td>
+            <td>&#10003;</td>
+            <td>&#10003;</td>
+            <td>&#10003;</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td rowspan="2" class="row-header">Average<br>Benchmarks</td>
+            <td>&delta;<sub>1</sub> &uarr;</td>
+            <td><i>partial*</i></td>
+            <td><i>partial*</i></td>
+            <td>0.715</td>
+            <td>0.823</td>
+            <td>0.802</td>
+            <td class="green-bold">0.882</td>
+        </tr>
+        <tr>
+            <td>AbsRel &darr;</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>0.156</td>
+            <td>0.144</td>
+            <td class="green-bold">0.116</td>
+        </tr>
+        <tr>
+            <td rowspan="2" class="row-header">NYU<span class="ref-text">(Silberman et al., 2012)</span></td>
+            <td>&delta;<sub>1</sub> &uarr;</td>
+            <td>0.915</td>
+            <td>0.963</td>
+            <td>0.961</td>
+            <td class="green-bold">0.965</td>
+            <td>0.961</td>
+            <td>0.948</td>
+        </tr>
+        <tr>
+            <td>AbsRel &darr;</td>
+            <td></td>
+            <td class="green-bold">0.07</td>
+            <td></td>
+            <td>0.074</td>
+            <td>0.0733</td>
+            <td>0.081</td>
+        </tr>
+        <tr>
+            <td rowspan="2" class="row-header">iBims1<span class="ref-text">(Koch et al., 2018)</span></td>
+            <td>&delta;<sub>1</sub> &uarr;</td>
+            <td>0.92</td>
+            <td></td>
+            <td>0.913</td>
+            <td>0.919</td>
+            <td>0.830</td>
+            <td class="green-bold">0.934</td>
+        </tr>
+        <tr>
+            <td>AbsRel &darr;</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>0.104</td>
+            <td>0.136</td>
+            <td class="green-bold">0.078</td>
+        </tr>
+        <tr>
+            <td rowspan="2" class="row-header">ETH3D<span class="ref-text">(Schops et al., 2019)</span></td>
+            <td>&delta;<sub>1</sub> &uarr;</td>
+            <td>0.718</td>
+            <td>0.917</td>
+            <td>0.415</td>
+            <td>0.687</td>
+            <td>0.908</td>
+            <td class="green-bold">0.935</td>
+        </tr>
+        <tr>
+            <td>AbsRel &darr;</td>
+            <td></td>
+            <td>0.104</td>
+            <td>0.327</td>
+            <td>0.236</td>
+            <td>0.104</td>
+            <td class="green-bold">0.103</td>
+        </tr>
+        <tr>
+            <td rowspan="2" class="row-header">DIODE-Indoor<span class="ref-text">(Vasiljevic et al., 2019)</span></td>
+            <td>&delta;<sub>1</sub> &uarr;</td>
+            <td></td>
+            <td>0.838</td>
+            <td>0.671</td>
+            <td>0.713</td>
+            <td>0.664</td>
+            <td class="green-bold">0.917</td>
+        </tr>
+        <tr>
+            <td>AbsRel &darr;</td>
+            <td></td>
+            <td>0.123</td>
+            <td>0.199</td>
+            <td>0.161</td>
+            <td>0.175</td>
+            <td class="green-bold">0.108</td>
+        </tr>
+        <tr>
+            <td rowspan="2" class="row-header">KITTI<span class="ref-text">(Uhrig et al., 2017)</span></td>
+            <td>&delta;<sub>1</sub> &uarr;</td>
+            <td></td>
+            <td class="green-bold">0.953</td>
+            <td>0.843&Dagger;</td>
+            <td>0.812</td>
+            <td>0.629</td>
+            <td>0.915</td>
+        </tr>
+        <tr>
+            <td>AbsRel &darr;</td>
+            <td></td>
+            <td class="green-bold">0.086</td>
+            <td>0.121&Dagger;</td>
+            <td>0.174</td>
+            <td>0.181</td>
+            <td>0.107</td>
+        </tr>
+        <tr>
+            <td rowspan="2" class="row-header">nuScenes<span class="ref-text">(Caesar et al., 2020)</span></td>
+            <td>&delta;<sub>1</sub> &uarr;</td>
+            <td class="green-italic">0.865&dagger;</td>
+            <td></td>
+            <td>0.491</td>
+            <td>0.840</td>
+            <td>0.820</td>
+            <td>0.643</td>
+        </tr>
+        <tr>
+            <td>AbsRel &darr;</td>
+            <td></td>
+            <td></td>
+            <td>0.287</td>
+            <td class="green-bold">0.189</td>
+            <td>0.195</td>
+            <td>0.219</td>
+        </tr>
+    </tbody>
+
+<div class="caption">
+    <strong>Table | Monocular metric depth estimation under the zero-shot transfer setting.</strong> Vision Banana achieves superior results on public datasets without using camera intrinsics in neither training of inference. Metrics marked with &uarr; are better if higher; metrics marked with &darr; are better if lower.
+</div>
+</table>
+
+<div class="notes">
+    * The average &delta;<sub>1</sub> of DepthLM-7B on the 4 datasets it evaluated on (NYU + iBims1 + ETH3D + nuScenes) is 0.855; our average &delta;<sub>1</sub> on the same 4 datasets is 0.865. The average &delta;<sub>1</sub> of Depth-Anything V3 on the 4 datasets it evaluated on (NYU + ETH3D + DIODE + KITTI) is 0.918; our average &delta;<sub>1</sub> on the same 4 datasets is 0.929.<br>
+    &dagger; DepthLM is trained on nuScenes so it's not zero-shot.<br>
+    &Dagger; Numbers reported by Depth-Anything V3 (<a href="#" style="color: blue; text-decoration: none;">Lin et al., 2025</a>).
+</div>
+
+
+                
 
                 <div class="examples-carousel" id="depth-carousel">
                     <button class="carousel-nav prev" id="depth-carousel-prev" aria-label="Previous example">‹</button>
@@ -864,6 +1357,103 @@
 
                 <h3>Surface Normal Estimation</h3>
 
+                <table style="border-collapse: collapse; text-align: center; font-family: serif; width: 100%;">
+  <thead>
+    <tr style="border-top: 2px solid black;">
+      <th rowspan="3" style="text-align: left; padding: 5px; vertical-align: middle;">Methods</th>
+      <th colspan="2" style="border-bottom: 1px solid black; padding: 5px;">Indoor</th>
+      <th colspan="6" style="border-bottom: 1px solid black; padding: 5px;">Indoor</th>
+      <th colspan="2" style="border-bottom: 1px solid black; padding: 5px;">Outdoor</th>
+    </tr>
+    <tr>
+      <th colspan="2" style="border-bottom: 1px solid black; padding: 5px;">Average</th>
+      <th colspan="2" style="border-bottom: 1px solid black; padding: 5px;">NYUv2<br><span style="color: blue; font-size: 0.8em; font-weight: normal;">(Silberman et al., 2012)</span></th>
+      <th colspan="2" style="border-bottom: 1px solid black; padding: 5px;">DIODE-indoor<br><span style="color: blue; font-size: 0.8em; font-weight: normal;">(Vasiljevic et al., 2019)</span></th>
+      <th colspan="2" style="border-bottom: 1px solid black; padding: 5px;">ScanNet<br><span style="color: blue; font-size: 0.8em; font-weight: normal;">(Dai et al., 2017)</span></th>
+      <th colspan="2" style="border-bottom: 1px solid black; padding: 5px;">VKitti<br><span style="color: blue; font-size: 0.8em; font-weight: normal;">(Cabon et al., 2020)</span></th>
+    </tr>
+    <tr style="border-bottom: 1px solid black;">
+      <th style="padding: 5px;">mean &darr;</th>
+      <th style="padding: 5px;">median &darr;</th>
+      <th style="padding: 5px;">mean &darr;</th>
+      <th style="padding: 5px;">median &darr;</th>
+      <th style="padding: 5px;">mean &darr;</th>
+      <th style="padding: 5px;">median &darr;</th>
+      <th style="padding: 5px;">mean &darr;</th>
+      <th style="padding: 5px;">median &darr;</th>
+      <th style="padding: 5px;">mean &darr;</th>
+      <th style="padding: 5px;">median &darr;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left; padding: 5px;">Marigold <span style="color: blue; font-size: 0.8em;">(Ke et al., 2024)</span></td>
+      <td>19.606</td>
+      <td>11.828</td>
+      <td>20.864</td>
+      <td>11.134</td>
+      <td>16.671</td>
+      <td>12.084</td>
+      <td>21.284</td>
+      <td>12.268</td>
+      <td>&ndash;</td>
+      <td>&ndash;</td>
+    </tr>
+    <tr>
+      <td style="text-align: left; padding: 5px;">DSINE <span style="color: blue; font-size: 0.8em;">(Bae and Davison, 2024)</span></td>
+      <td>17.017</td>
+      <td>10.190</td>
+      <td style="color: green; font-weight: bold;">16.4</td>
+      <td style="color: green; font-weight: bold;">8.4</td>
+      <td>18.453</td>
+      <td>13.871</td>
+      <td>16.2</td>
+      <td>8.3</td>
+      <td>28.9</td>
+      <td>9.9</td>
+    </tr>
+    <tr>
+      <td style="text-align: left; padding: 5px;">StableNormal <span style="color: blue; font-size: 0.8em;">(Ye et al., 2024)</span></td>
+      <td>17.168</td>
+      <td>10.028</td>
+      <td>19.707</td>
+      <td>10.527</td>
+      <td style="color: green; font-weight: bold;">13.701</td>
+      <td style="color: green; font-weight: bold;">9.46</td>
+      <td>18.098</td>
+      <td>10.097</td>
+      <td>&ndash;</td>
+      <td>&ndash;</td>
+    </tr>
+    <tr>
+      <td style="text-align: left; padding: 5px;">Lotus-2-Normal <span style="color: blue; font-size: 0.8em;">(He et al., 2025)</span></td>
+      <td>16.558</td>
+      <td>&ndash;</td>
+      <td>16.9</td>
+      <td>N/A</td>
+      <td>18.575</td>
+      <td>N/A</td>
+      <td style="color: green; font-weight: bold;">14.2</td>
+      <td>N/A</td>
+      <td style="color: green; font-weight: bold;">28.894</td>
+      <td style="color: green; font-weight: bold;">9.677</td>
+    </tr>
+    <tr style="border-top: 1px solid black; border-bottom: 2px solid black;">
+      <td style="text-align: left; padding: 5px;"><strong>Vision Banana</strong> &#128269;&#127820;</td>
+      <td style="color: green; font-weight: bold;">15.549</td>
+      <td style="color: green; font-weight: bold;">9.300</td>
+      <td>17.778</td>
+      <td>8.876</td>
+      <td>13.818</td>
+      <td>11.556</td>
+      <td>15.052</td>
+      <td style="color: green; font-weight: bold;">7.468</td>
+      <td>29.063</td>
+      <td>10.699</td>
+    </tr>
+  </tbody>
+</table>
+
                 <div class="examples-carousel" id="normal-carousel">
                     <button class="carousel-nav prev" id="normal-carousel-prev" aria-label="Previous example">‹</button>
                     <button class="carousel-nav next" id="normal-carousel-next" aria-label="Next example">›</button>
@@ -919,6 +1509,27 @@
                         <div class="dot" data-example="2"></div>
                     </div>
                 </div>
+    
+<h2>BibTeX</h2>
+
+  <div class="bibtex-wrapper">
+    <button class="copy-btn" aria-label="Copy to clipboard">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+    </button>
+    <pre><code>
+TBD
+
+</code></pre>
+  </div>
+
+  <div class="footer">
+    <span>Thank you for visiting our project site!</span>
+    <!-- Using a Wikipedia commons link for the Google DeepMind logo for demonstration -->
+    <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Google_DeepMind_logo.svg/512px-Google_DeepMind_logo.svg.png" alt="Google DeepMind"> -->
+  </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
