@@ -57,6 +57,7 @@
             margin: 0;
             line-height: 1.02;
             letter-spacing: -0.03em;
+            text-align: center;
         }
 
         .hero-copy p.subtitle {
@@ -160,6 +161,135 @@
             text-align: center;
         }
 
+        .before-after {
+            margin: 32px 0;
+            max-width: 820px;
+            width: 100%;
+        }
+
+        .before-after h2 {
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            margin: 0 0 18px;
+            color: #0f172a;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .ba-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+            background: #f8fafc;
+        }
+
+        .ba-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .ba-after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.5;
+        }
+
+        .ba-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            background: #ffffffee;
+            border: 1px solid rgba(15, 23, 42, 0.16);
+            box-shadow: 0 16px 28px rgba(15, 23, 42, 0.12);
+            display: grid;
+            place-items: center;
+            cursor: ew-resize;
+            z-index: 2;
+        }
+
+        .ba-handle::before {
+            content: "< >";
+            font-size: 0.9rem;
+            color: #0f172a;
+            letter-spacing: 0.1em;
+        }
+
+        .ba-overlay-labels {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            right: 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 2;
+        }
+
+        .ba-label {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.88);
+            color: #0f172a;
+            font-size: 0.9rem;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+        }
+
+        .ba-controls {
+            padding: 18px 20px 22px;
+            background: rgba(255, 247, 205, 0.95);
+            border-top: 1px solid rgba(148, 163, 184, 0.18);
+            display: grid;
+            gap: 14px;
+        }
+
+        .ba-controls input[type="range"] {
+            order: 1;
+            width: 100%;
+            accent-color: #4338ca;
+        }
+
+        .ba-controls label {
+            order: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .ba-prompt {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-family: 'Monaco', 'Menlo', monospace;
+            line-height: 1.6;
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            border-left: 3px solid #4338ca;
+        }
+
+        .ba-caption {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #475569;
+            margin: 0;
+        }
+
         .tl-dr {
             display: flex;
             justify-content: center;
@@ -194,8 +324,6 @@
             border: 1px solid rgba(148, 163, 184, 0.25);
             border-radius: 20px;
             box-shadow: 0 16px 60px rgba(15, 23, 42, 0.06);
-            max-width: 920px;
-            width: 100%;
         }
 
         .abstract h2 {
@@ -203,6 +331,7 @@
             margin: 0 0 16px;
             color: #0f172a;
             font-weight: 700;
+            text-align: center;
         }
 
         .abstract p {
@@ -251,9 +380,43 @@
                     <h2>Abstract</h2>
                     <p>Recent works show that image and video generators exhibit zero-shot visual understanding behaviors, in a way reminiscent of how Large Language Models (LLMs) develop emergent capabilities of language understanding and reasoning from generative pretraining. While it has long been conjectured that the ability to create visual content implies an ability to understand it, there has been limited evidence that generative vision models have developed strong understanding capabilities. In this work, we demonstrate that image generation training serves a role similar to LLM pretraining, and lets models learn powerful and general visual representations that enable <strong>state-of-the-art</strong> performance on various vision tasks. We introduce <em>Vision Banana</em>, a generalist model built by instruction-tuning <em>Nano Banana Pro</em> (NBP) on a mixture of its original training data alongside a small amount of vision task data. By parameterizing the output space of vision tasks as RGB images, we seamlessly reframe perception as image generation. Our generalist model, <em>Vision Banana</em>, achieves state-of-the-art results on a variety of vision tasks involving both 2D and 3D understanding, beating or rivaling zero-shot domain-specialists, including the <em>Segment Anything</em> series on segmentation tasks, and the <em>Depth Anything</em> series on metric depth estimation. We show that these results can be achieved with lightweight instruction-tuning without sacrificing the base model's image generation capabilities. The superior results suggest that image generation pretraining is a generalist vision learner. It also shows that image generation serves as a unified and universal interface for vision tasks, similar to text generation's role in language understanding and reasoning. We could be witnessing a major paradigm shift for computer vision, where generative vision pretraining takes a central role in building Foundational Vision Models for both generation and understanding.</p>
                 </div>
+
+                <div class="before-after" aria-label="Before after slider">
+                    <h2>2D Semantic Understanding</h2>
+                    <div class="ba-container" id="ba-container">
+                        <img src="files/images/semseg/img1.jpg" alt="Before image">
+                        <div class="ba-after" id="ba-after">
+                            <img src="files/images/semseg/img1-prompt1.png" alt="After image">
+                        </div>
+                    </div>
+                    <div class="ba-prompt"><strong>Prompt:</strong> Generate a visualization image of semantic segmentation, using this color mapping: {"cat ears": &lt;255, 165, 0&gt;, "exit sign": &lt;0, 0, 255&gt;, "background": &lt;125, 0, 125&gt;}</div>
+                    <div class="ba-controls">
+                        <label for="ba-range">Slide to visualize the mask <span id="ba-percentage">50%</span></label>
+                        <input id="ba-range" type="range" min="0" max="100" value="50">
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('ba-container');
+            const after = document.getElementById('ba-after');
+            const range = document.getElementById('ba-range');
+            const percentage = document.getElementById('ba-percentage');
+
+            function updatePosition(value) {
+                after.style.opacity = `${value / 100}`;
+                percentage.textContent = `${Math.round(value)}%`;
+            }
+
+            range.addEventListener('input', function (event) {
+                updatePosition(event.target.value);
+            });
+
+            updatePosition(50);
+        });
+    </script>
 </body>
 </html>
