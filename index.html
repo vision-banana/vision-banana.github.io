@@ -4,9 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vision Banana | Image Generators are Generalist Vision Learners</title>
+    <title>Vision Banana | Google DeepMind</title>
     <meta name="description"
         content="Vision Banana: A generalist model built by instruction-tuning Nano Banana Pro, achieving state-of-the-art on segmentation, depth, and surface normal tasks.">
+    <meta property="og:title" content="Vision Banana | Google DeepMind">
+    <meta property="og:description" content="A generalist model achieving state-of-the-art on segmentation, depth, and surface normal tasks.">
+    <meta property="og:image" content="files/images/logo.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="files/images/logo.png">
+    <link rel="icon" type="image/png" href="files/images/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
@@ -297,7 +304,7 @@
             width: 100%;
             height: 100%;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.8s ease;
         }
 
         .reveal-card .prediction img {
@@ -548,8 +555,28 @@
         }
 
         .bar-fill.non-zero-shot {
-            background: #cbd5e1;
-            color: #334155;
+            background: repeating-linear-gradient(
+                -45deg,
+                #e2e8f0,
+                #e2e8f0 4px,
+                #cbd5e1 4px,
+                #cbd5e1 8px
+            );
+            color: #475569;
+        }
+
+        .bar-row.non-zs-row {
+            opacity: 0.5;
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+
+        .non-zs-group {
+            opacity: 0.5;
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+            border-bottom: 1px dashed #cbd5e1;
         }
 
         .chart-note {
@@ -1113,10 +1140,10 @@
                     <div class="carousel-item">
                         <div class="reveal-card" data-task="normal">
                             <img src="files/images/normal/sn_1_in.jpg" alt="Input image">
-                            <div class="prediction"><img src="files/images/normal/sn_1_out.jpg" alt="Normal prediction">
+                            <div class="prediction"><img src="files/images/normal/sn_1_out.jpg" alt="Surface Normal prediction">
                             </div>
                             <span class="reveal-label input-label">Input</span>
-                            <span class="reveal-label pred-label">Normal</span>
+                            <span class="reveal-label pred-label">Surface Normal</span>
                         </div>
                         <div class="reveal-caption"><strong>Prompt:</strong> Generate a surface normal map of the input
                             image.</div>
@@ -1124,10 +1151,10 @@
                     <div class="carousel-item">
                         <div class="reveal-card" data-task="normal">
                             <img src="files/images/normal/sn_2_in.jpg" alt="Input image">
-                            <div class="prediction"><img src="files/images/normal/sn_2_out.jpg" alt="Normal prediction">
+                            <div class="prediction"><img src="files/images/normal/sn_2_out.jpg" alt="Surface Normal prediction">
                             </div>
                             <span class="reveal-label input-label">Input</span>
-                            <span class="reveal-label pred-label">Normal</span>
+                            <span class="reveal-label pred-label">Surface Normal</span>
                         </div>
                         <div class="reveal-caption"><strong>Prompt:</strong> Generate a surface normal map of the input
                             image.</div>
@@ -1135,10 +1162,10 @@
                     <div class="carousel-item">
                         <div class="reveal-card" data-task="normal">
                             <img src="files/images/normal/sn_4_in.jpg" alt="Input image">
-                            <div class="prediction"><img src="files/images/normal/sn_4_out.png" alt="Normal prediction">
+                            <div class="prediction"><img src="files/images/normal/sn_4_out.png" alt="Surface Normal prediction">
                             </div>
                             <span class="reveal-label input-label">Input</span>
-                            <span class="reveal-label pred-label">Normal</span>
+                            <span class="reveal-label pred-label">Surface Normal</span>
                         </div>
                         <div class="reveal-caption"><strong>Prompt:</strong> Generate a surface normal map of the input
                             image.</div>
@@ -1165,10 +1192,12 @@
                     <span class="chart-title">Cityscapes (Semantic Segmentation)</span>
                     <span class="chart-metric">mIoU ↑ Higher is better</span>
                 </div>
-                <div class="bar-row">
-                    <span class="bar-label">SegMan-L<br><small style="color: #64748b;">(Non Zero-Shot)</small></span>
-                    <div class="bar-track">
-                        <div class="bar-fill non-zero-shot" style="width: 100%;">0.842</div>
+                <div class="non-zs-group">
+                    <div class="bar-row">
+                        <span class="bar-label">SegMan-L<br><small style="color: #64748b;">(Non Zero-Shot)</small></span>
+                        <div class="bar-track">
+                            <div class="bar-fill non-zero-shot" style="width: 100%;">0.842</div>
+                        </div>
                     </div>
                 </div>
                 <div class="bar-row">
@@ -1210,10 +1239,12 @@
                     <span class="chart-title">SA-Co/Gold</span>
                     <span class="chart-metric">pmF1 ↑ Higher is better</span>
                 </div>
-                <div class="bar-row">
-                    <span class="bar-label">SAM 3<br><small style="color: #64748b;">(Non Zero-Shot)</small></span>
-                    <div class="bar-track">
-                        <div class="bar-fill non-zero-shot" style="width: 100%;">0.661</div>
+                <div class="non-zs-group">
+                    <div class="bar-row">
+                        <span class="bar-label">SAM 3<br><small style="color: #64748b;">(Non Zero-Shot)</small></span>
+                        <div class="bar-track">
+                            <div class="bar-fill non-zero-shot" style="width: 100%;">0.661</div>
+                        </div>
                     </div>
                 </div>
                 <div class="bar-row">
@@ -1256,18 +1287,20 @@
                     <span class="chart-title">RefCOCOg val (UMD)</span>
                     <span class="chart-metric">cIoU ↑ Higher is better</span>
                 </div>
-                <div class="bar-row">
-                    <span class="bar-label">X-SAM + Phi3<br><small style="color: #64748b;">(Non
-                            Zero-Shot)</small></span>
-                    <div class="bar-track">
-                        <div class="bar-fill non-zero-shot" style="width: 100%;">0.838</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">HyperSeg + Phi2<br><small style="color: #64748b;">(Non
-                            Zero-Shot)</small></span>
-                    <div class="bar-track">
-                        <div class="bar-fill non-zero-shot" style="width: 94.7%;">0.794</div>
+                <div class="non-zs-group">
+                    <div class="bar-row">
+                        <span class="bar-label">HyperSeg + Phi2<br><small style="color: #64748b;">(Non
+                                Zero-Shot)</small></span>
+                        <div class="bar-track">
+                            <div class="bar-fill non-zero-shot" style="width: 94.7%;">0.794</div>
+                            </div>
+                            </div>
+                            <div class="bar-row">
+                        <span class="bar-label">X-SAM + Phi3<br><small style="color: #64748b;">(Non
+                                Zero-Shot)</small></span>
+                        <div class="bar-track">
+                            <div class="bar-fill non-zero-shot" style="width: 100%;">0.838</div>
+                            </div>
                     </div>
                 </div>
                 <div class="bar-row">
@@ -1316,19 +1349,19 @@
                     </div>
                 </div>
                 <div class="bar-row">
-                    <span class="bar-label">SAM 3 Agent</span>
+                    <span class="bar-label">SAM 3 Agent<br>+ Gemini 2.5 Pro</span>
                     <div class="bar-track">
                         <div class="bar-fill second" style="width: 97.1%;">0.770</div>
                     </div>
                 </div>
                 <div class="bar-row">
                     <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
-                                style="height: 1.2em; vertical-align: middle;"></strong></span>
+                                style="height: 1.2em; vertical-align: middle;"></strong><br>+ Gemini 2.5 Pro</span>
                     <div class="bar-track">
                         <div class="bar-fill highlight" style="width: 100%;">0.793</div>
                     </div>
                 </div>
-                <div class="chart-note">Methods paired with MLLMs for reasoning. Vision Banana uses Gemini 2.5 Pro.
+                <div class="chart-note">Methods paired with MLLMs for reasoning.
                 </div>
             </div>
 
@@ -1338,7 +1371,7 @@
             <!-- Depth -->
             <div class="chart-card fade-in">
                 <div class="chart-header">
-                    <span class="chart-title">Monocular Metric Depth — Average Benchmarks</span>
+                    <span class="chart-title">Metric Depth Prediction — Average Benchmarks</span>
                     <span class="chart-metric">δ₁ ↑ Higher is better</span>
                 </div>
                 <div class="bar-row">
@@ -1373,26 +1406,13 @@
             <!-- Surface Normal -->
             <div class="chart-card fade-in">
                 <div class="chart-header">
-                    <span class="chart-title">Surface Normal Estimation — Average Indoor</span>
+                    <span class="chart-title">Surface Normal Estimation — Average Benchmarks</span>
                     <span class="chart-metric">Mean Angular Error (°) ↓ Lower is better</span>
                 </div>
                 <div class="bar-row">
-                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
-                                style="height: 1.2em; vertical-align: middle;"></strong></span>
+                    <span class="bar-label">Marigold</span>
                     <div class="bar-track">
-                        <div class="bar-fill highlight" style="width: 79.3%;">15.55</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">Lotus-2-Normal</span>
-                    <div class="bar-track">
-                        <div class="bar-fill second" style="width: 84.5%;">16.56</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">DSINE</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 86.8%;">17.02</div>
+                        <div class="bar-fill" style="width: 100%;">19.61</div>
                     </div>
                 </div>
                 <div class="bar-row">
@@ -1402,9 +1422,22 @@
                     </div>
                 </div>
                 <div class="bar-row">
-                    <span class="bar-label">Marigold</span>
+                    <span class="bar-label">DSINE</span>
                     <div class="bar-track">
-                        <div class="bar-fill" style="width: 100%;">19.61</div>
+                        <div class="bar-fill" style="width: 86.8%;">17.02</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Lotus-2-Normal</span>
+                    <div class="bar-track">
+                        <div class="bar-fill second" style="width: 84.5%;">16.56</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                style="height: 1.2em; vertical-align: middle;"></strong></span>
+                    <div class="bar-track">
+                        <div class="bar-fill highlight" style="width: 79.3%;">15.55</div>
                     </div>
                 </div>
             </div>
