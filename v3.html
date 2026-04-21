@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Banana | Image Generators are Generalist Vision Learners</title>
+    <meta name="description"
+        content="Vision Banana: A generalist model built by instruction-tuning Nano Banana Pro, achieving state-of-the-art on segmentation, depth, and surface normal tasks.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ===== Reset & Base ===== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 72px;
+        }
+
+        body {
+            background: #ffffff;
+            color: #1e293b;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== Layout ===== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        section+section {
+            border-top: 1px solid #f1f5f9;
+        }
+
+        /* ===== Navigation ===== */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .nav.scrolled {
+            box-shadow: 0 1px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .nav-inner::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-link {
+            padding: 7px 18px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #334155;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+
+        .nav-link.active {
+            color: #0f172a;
+            background: #f1f5f9;
+            font-weight: 600;
+        }
+
+        /* ===== Hero ===== */
+        .hero {
+            text-align: center;
+            padding: 64px 24px 48px;
+        }
+
+        .hero-logo {
+            width: 90px;
+            height: auto;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 1.0;
+            color: #0f172a;
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.5rem, 3.2vw, 2.65rem);
+            font-weight: 500;
+            color: #475569;
+            line-height: 1.4;
+            margin-bottom: 24px;
+        }
+
+        .hero-affiliation {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 32px;
+            letter-spacing: 0.01em;
+        }
+
+        .hero-affiliation img {
+            height: 52px;
+            width: auto;
+        }
+
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 36px;
+            border-radius: 999px;
+            background: #0f172a;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border: 2px solid #0f172a;
+        }
+
+        .hero-btn:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+        }
+
+        /* ===== Section Headings ===== */
+        .section-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 800;
+            color: #0f172a;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.03em;
+        }
+
+        .section-desc {
+            text-align: center;
+            color: #334155;
+            font-size: 1rem;
+            max-width: 640px;
+            margin: 0 auto 48px;
+        }
+
+        .subsection-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #334155;
+            text-align: center;
+            margin: 48px 0 24px;
+        }
+
+        /* ===== TL;DR Cards ===== */
+        .tldr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 48px;
+        }
+
+        .tldr-card {
+            padding: 24px;
+            border-radius: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .tldr-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .tldr-icon {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .tldr-text {
+            font-size: 0.92rem;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        /* ===== Teaser ===== */
+        .teaser-img {
+            width: 80%;
+            display: block;
+            margin: 0 auto 48px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ===== Abstract ===== */
+        .abstract-card {
+            padding: 36px;
+            border-radius: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .abstract-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #0f172a;
+        }
+
+        .abstract-card p {
+            font-size: 0.95rem;
+            line-height: 1.85;
+            color: #475569;
+        }
+
+        /* ===== Reveal Cards (Hover-to-Reveal) ===== */
+        .reveal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 16px;
+        }
+
+        .reveal-card {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            transition: box-shadow 0.3s ease;
+            aspect-ratio: 4 / 3;
+            background: #f0f0f0;
+        }
+
+        .reveal-card:hover {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .reveal-card>img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .reveal-card .prediction {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .reveal-card .prediction img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .reveal-card:hover .prediction,
+        .reveal-card.tapped .prediction {
+            opacity: 1;
+        }
+
+        .reveal-card .reveal-label {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+
+        .reveal-card .reveal-label.pred-label {
+            opacity: 0;
+        }
+
+        .reveal-card:hover .reveal-label.input-label,
+        .reveal-card.tapped .reveal-label.input-label {
+            opacity: 0;
+        }
+
+        .reveal-card:hover .reveal-label.pred-label,
+        .reveal-card.tapped .reveal-label.pred-label {
+            opacity: 1;
+        }
+
+        .reveal-hint {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #0f172a;
+            font-weight: 600;
+            margin: 8px auto 32px;
+            background: #f1f5f9;
+            padding: 6px 16px;
+            border-radius: 999px;
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .reveal-hint::before {
+            content: '💡';
+        }
+
+        /* ===== Carousel ===== */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.3s ease;
+            gap: 20px;
+        }
+
+        .carousel-item {
+            flex: 0 0 calc(50% - 10px);
+            min-width: 0;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .carousel-btn:hover {
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: #0f172a;
+        }
+
+        .carousel-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .carousel-btn.prev {
+            left: 10px;
+        }
+
+        .carousel-btn.next {
+            right: 10px;
+        }
+
+        .carousel-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ===== Prompt Selector ===== */
+        .prompt-selector {
+            display: flex;
+            gap: 8px;
+            margin: 12px 0 8px 0;
+            justify-content: center;
+        }
+
+        .prompt-btn {
+            padding: 6px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            background: #fff;
+            color: #475569;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .prompt-btn:hover {
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        .prompt-btn.active {
+            background: #0f172a;
+            color: #fff;
+            border-color: #0f172a;
+        }
+
+        .reveal-caption {
+            padding: 10px 14px;
+            font-size: 0.78rem;
+            color: #334155;
+            background: #f8fafc;
+            line-height: 1.5;
+            font-family: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
+        }
+
+        /* ===== Bar Charts ===== */
+        .chart-card {
+            padding: 32px;
+            border-radius: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .chart-metric {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .bar-label {
+            width: 160px;
+            min-width: 160px;
+            text-align: right;
+            font-size: 0.82rem;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 30px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+            background: #94a3b8;
+            transition: width 0.8s ease;
+        }
+
+        .bar-fill.highlight {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .bar-fill.second {
+            background: #64748b;
+        }
+
+        .bar-fill.non-zero-shot {
+            background: #cbd5e1;
+            color: #334155;
+        }
+
+        .chart-note {
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* ===== BibTeX ===== */
+        .bibtex-card {
+            position: relative;
+            padding: 24px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .bibtex-card pre {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.82rem;
+            color: #334155;
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.6;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-btn:hover {
+            background: #cbd5e1;
+        }
+
+        .copy-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: #64748b;
+        }
+
+        .copy-btn.copied {
+            background: #10b981;
+        }
+
+        .copy-btn.copied svg {
+            stroke: #fff;
+        }
+
+        /* ===== Contributors ===== */
+        .contributors-section {
+            padding: 60px 0;
+            background: #f8fafc;
+        }
+
+        .contributor-group {
+            max-width: 1000px;
+            margin: 0 auto 36px;
+            text-align: center;
+        }
+
+        .contributor-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .contributor-role {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #64748b;
+            background: #e2e8f0;
+            padding: 4px 14px;
+            border-radius: 999px;
+            margin-bottom: 16px;
+        }
+
+        .contributor-role.lead {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
+        }
+
+        .contributor-names {
+            font-size: 0.95rem;
+            color: #334155;
+            line-height: 2;
+        }
+
+        .contributor-names strong {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .contributor-equal {
+            font-size: 0.85rem;
+            color: #334155;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 32px 24px;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 40px 20px 32px;
+            }
+
+            .hero-logo {
+                width: 110px;
+            }
+
+            section {
+                padding: 56px 0;
+            }
+
+            .reveal-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .bar-label {
+                width: 100px;
+                min-width: 100px;
+                font-size: 0.75rem;
+            }
+
+            .chart-card {
+                padding: 20px;
+            }
+
+            .nav-inner {
+                justify-content: flex-start;
+                padding: 12px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .reveal-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bar-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .bar-label {
+                width: 100%;
+                text-align: left;
+            }
+
+            .tldr-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== Animations ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== HERO ===== -->
+    <header class="hero" id="top">
+        <div class="container">
+            <img src="files/images/logo.png" alt="Vision Banana Logo" class="hero-logo">
+            <h1 class="hero-title">Vision Banana</h1>
+            <p class="hero-subtitle">Image Generators are Generalist Vision Learners</p>
+            <div class="hero-affiliation">
+                <img src="files/images/gdm_logo.png" alt="Google DeepMind">
+            </div>
+            <br>
+            <a href="#" class="hero-btn" id="btn-report">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+                Technical Report
+            </a>
+        </div>
+    </header>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="nav" id="main-nav">
+        <div class="nav-inner container">
+            <a href="#overview" class="nav-link active">Overview</a>
+            <a href="#capabilities" class="nav-link">Capabilities</a>
+            <a href="#results" class="nav-link">Results</a>
+            <a href="#contributors" class="nav-link">Contributors</a>
+        </div>
+    </nav>
+
+    <!-- ===== OVERVIEW ===== -->
+    <section id="overview">
+        <div class="container">
+            <h2 class="section-title">Overview</h2>
+            <!-- <p class="section-desc"><strong>Image generation pretraining as a universal foundation for visual
+                    understanding.</strong></p> -->
+
+            <!-- TL;DR Cards -->
+            <div class="tldr-grid fade-in">
+                <div class="tldr-card">
+                    <div class="tldr-icon">🧠</div>
+                    <div class="tldr-text">Image generation pretraining behaves as a generalist vision learner,
+                        analogous to next-token prediction for LLMs.</div>
+                </div>
+                <div class="tldr-card">
+                    <div class="tldr-icon">🔗</div>
+                    <div class="tldr-text">Image generation serves as a universal interface for diverse vision tasks —
+                        segmentation, depth, normals, and more.</div>
+                </div>
+                <div class="tldr-card">
+                    <div class="tldr-icon">🏆</div>
+                    <div class="tldr-text">Vision Banana as a unified model exhibits SOTA performance on a wide range
+                        of vision tasks.</div>
+                </div>
+            </div>
+
+            <!-- Teaser -->
+            <img src="files/images/teaser_img_v6.png"
+                alt="Vision Banana overview: from generative pretraining to vision understanding"
+                class="teaser-img fade-in">
+        </div>
+    </section>
+
+    <!-- ===== CAPABILITIES ===== -->
+    <section id="capabilities">
+        <div class="container">
+            <h2 class="section-title">Capabilities</h2>
+            <p class="section-desc">Hover over any image to reveal Vision Banana's prediction. On mobile, tap to toggle.
+            </p>
+
+            <!-- Semantic Segmentation -->
+            <h3 class="subsection-title">Semantic Segmentation</h3>
+            <div class="carousel-container" id="carousel-semseg">
+                <button class="carousel-btn prev" aria-label="Previous">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="carousel-btn next" aria-label="Next">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                <div class="carousel-track">
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="semseg">
+                            <img src="files/images/semseg/img2.jpg" alt="Input image">
+                            <div class="prediction"><img src="files/images/semseg/img2-prompt2.png"
+                                    alt="Semantic segmentation prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Prediction</span>
+                        </div>
+                        <div class="prompt-selector">
+                            <button class="prompt-btn active" data-prompt="1"
+                                data-img="files/images/semseg/img2-prompt2.png"
+                                data-text="This image is a per-pixel class labeling of the input. The macaron cakes are represented by (255, 255, 0). The round plates are represented by (255, 192, 128). The slice cakes are depicted in (64, 192, 64). The flowers are shown in (128, 0, 64). The tongs are (255, 0, 192).">Prompt
+                                1</button>
+                            <button class="prompt-btn" data-prompt="2" data-img="files/images/semseg/img2-prompt1.png"
+                                data-text="Generate a semantic segmentation visualization of the input. The menu is #80C000. The dessert is #800000. The patterns on the wall is #40FFC">Prompt
+                                2</button>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> This image is a per-pixel class labeling of
+                            the input. The macaron cakes are represented by (255, 255, 0). The round plates are
+                            represented by (255, 192, 128). The slice cakes are depicted in (64, 192, 64). The flowers
+                            are shown in (128, 0, 64). The tongs are (255, 0, 192).</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="semseg">
+                            <img src="files/images/semseg/img1.jpg" alt="Input image">
+                            <div class="prediction"><img src="files/images/semseg/img1-prompt1.png"
+                                    alt="Semantic segmentation prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Prediction</span>
+                        </div>
+                        <div class="prompt-selector">
+                            <button class="prompt-btn active" data-prompt="1"
+                                data-img="files/images/semseg/img1-prompt1.png"
+                                data-text="Generate a visualization image of semantic segmentation, using this color mapping: {&quot;cat ears&quot;: &lt;255, 165, 0&gt;, &quot;exit sign&quot;: &lt;0, 0, 255&gt;, &quot;background&quot;: &lt;125, 0, 125&gt;}">Prompt
+                                1</button>
+                            <button class="prompt-btn" data-prompt="2" data-img="files/images/semseg/img1-prompt2.png"
+                                data-text="Generate a semantic segmentation visualization image, using this color mapping: {&quot;cat&quot;: &quot;red&quot;, &quot;lock&quot;: &quot;pink&quot;, &quot;exit sign&quot;: &quot;light purple&quot;, &quot;background&quot;: &quot;yellow&quot;}">Prompt
+                                2</button>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> Generate a visualization image of semantic
+                            segmentation, using this color mapping: {"cat ears": &lt;255, 165, 0&gt;, "exit sign":
+                            &lt;0, 0, 255&gt;, "background": &lt;125, 0, 125&gt;}</div>
+                    </div>
+                </div>
+            </div>
+            <p class="reveal-hint">Hover to reveal segmentation masks</p>
+
+            <!-- Instance Segmentation -->
+            <h3 class="subsection-title">Instance Segmentation</h3>
+            <div class="carousel-container" id="carousel-insseg">
+                <button class="carousel-btn prev" aria-label="Previous">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="carousel-btn next" aria-label="Next">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                <div class="carousel-track">
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="insseg">
+                            <img src="files/images/insseg/insseg2.jpg" alt="Input image">
+                            <div class="prediction"><img src="files/images/insseg/insseg2_1.png"
+                                    alt="Instance segmentation prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Prediction</span>
+                        </div>
+                        <div class="prompt-selector">
+                            <button class="prompt-btn active" data-prompt="1"
+                                data-img="files/images/insseg/insseg2_1.png"
+                                data-text="Generate an instance segmentation visualization of this image. Each piece of garlic is colored differently.">Prompt
+                                1</button>
+                            <button class="prompt-btn" data-prompt="2" data-img="files/images/insseg/insseg2_2.png"
+                                data-text="Generate an instance segmentation visualization of this image. Each piece of beef is colored differently.">Prompt
+                                2</button>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> Generate an instance segmentation
+                            visualization of this image. Each piece of garlic is colored differently.</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="insseg">
+                            <img src="files/images/insseg/insseg1.jpg" alt="Input image">
+                            <div class="prediction"><img src="files/images/insseg/insseg1_1.png"
+                                    alt="Instance segmentation prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Prediction</span>
+                        </div>
+                        <div class="prompt-selector">
+                            <button class="prompt-btn active" data-prompt="1"
+                                data-img="files/images/insseg/insseg1_1.png"
+                                data-text="Generate an instance segmentation visualization of this image. Each price tag is colored differently.">Prompt
+                                1</button>
+                            <button class="prompt-btn" data-prompt="2" data-img="files/images/insseg/insseg1_2.png"
+                                data-text="This image is a segmentation task derived from the input. The &quot;crescent&quot;-shaped croissant instances are each represented by a unique, solid color. Background is RGB(88, 50, 82).">Prompt
+                                2</button>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> Generate an instance segmentation
+                            visualization of this image. Each price tag is colored differently.</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="insseg">
+                            <img src="files/images/insseg/insseg3.png" alt="Input image">
+                            <div class="prediction"><img src="files/images/insseg/insseg3_1.png"
+                                    alt="Instance segmentation prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Prediction</span>
+                        </div>
+                        <div class="prompt-selector">
+                            <button class="prompt-btn active" data-prompt="1"
+                                data-img="files/images/insseg/insseg3_1.png"
+                                data-text="This image shows segmentation masks for the basketballs from the input image. The background is set to #10aa05. Each basketball instance is represented by a solid circular mask, and a different color is used for each mask.">Prompt
+                                1</button>
+                            <button class="prompt-btn" data-prompt="2" data-img="files/images/insseg/insseg3_2.png"
+                                data-text="This image shows segmentation masks for the balls from the input image. The background is set to white color. Each ball is represented by a different color.">Prompt
+                                2</button>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> This image shows segmentation masks for the
+                            basketballs from the input image. The background is set to #10aa05. Each basketball instance
+                            is represented by a solid circular mask, and a different color is used for each mask.</div>
+                    </div>
+                </div>
+            </div>
+            <p class="reveal-hint">Hover to reveal instance masks</p>
+
+            <!-- Referring Expression Segmentation -->
+            <h3 class="subsection-title">Referring Expression Segmentation</h3>
+            <div class="carousel-container" id="carousel-refseg">
+                <button class="carousel-btn prev" aria-label="Previous">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="carousel-btn next" aria-label="Next">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                <div class="carousel-track">
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="refseg">
+                            <img src="files/images/refseg/refseg5_in.png" alt="Input image">
+                            <div class="prediction"><img src="files/images/refseg/refseg5_out.png"
+                                    alt="Referring segmentation prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Prediction</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> This image shows segmentation masks from
+                            the given image. The background is black color. The chef's names in both Chinese and English
+                            are rendered as cyan color.</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="refseg">
+                            <img src="files/images/refseg/refseg3.jpeg" alt="Input image">
+                            <div class="prediction"><img src="files/images/refseg/refseg3_pred.jpg"
+                                    alt="Referring segmentation prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Prediction</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> A segmentation map image. The stretching
+                            cat is rendered in green, the cat that is cleaning itself is in cyan.</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="refseg">
+                            <img src="files/images/refseg/refseg4_in.png" alt="Input image">
+                            <div class="prediction"><img src="files/images/refseg/refseg_4_pred1.png"
+                                    alt="Referring segmentation prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Prediction</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> This image shows segmentation masks from
+                            the given image. The background is black color. The game control device is represented by a
+                            solid yellow.</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="refseg">
+                            <img src="files/images/refseg/refseg1.jpeg" alt="Input image">
+                            <div class="prediction"><img src="files/images/refseg/refseg1_pred.png"
+                                    alt="Referring segmentation prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Prediction</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> A segmentation map image. The area that
+                            corresponds to the man in pink t shirt is rendered solid white; the other man is rendered in
+                            green.</div>
+                    </div>
+                </div>
+            </div>
+            <p class="reveal-hint">Hover to reveal referred object masks</p>
+
+            <!-- Monocular Depth Estimation -->
+            <h3 class="subsection-title">Metric Depth Prediction</h3>
+            <div class="carousel-container" id="carousel-depth">
+                <button class="carousel-btn prev" aria-label="Previous">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="carousel-btn next" aria-label="Next">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                <div class="carousel-track">
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="depth">
+                            <img src="files/images/depth/depth_runners_0.png" alt="Input image">
+                            <div class="prediction"><img src="files/images/depth/depth_runners_1.png"
+                                    alt="Depth prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Depth</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> Predict the metric depth of this scene as
+                            an image. Visualized in the rainbow (black-red-yellow-green-cyan-blue-violet-white) color
+                            palette.</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="depth">
+                            <img src="files/images/depth/depth_eth3d_47_0.jpg" alt="Input image">
+                            <div class="prediction"><img src="files/images/depth/depth_eth3d_47_1.jpg"
+                                    alt="Depth prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Depth</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> Generate a metric depth map of the input
+                            image.</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="depth">
+                            <img src="files/images/depth/depth_kinkaku_0.jpg" alt="Input image">
+                            <div class="prediction"><img src="files/images/depth/depth_kinkaku_1.png"
+                                    alt="Depth prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Depth</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> Generate a metric depth map of the input
+                            image.</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="depth">
+                            <img src="files/images/depth/depth_18_0.png" alt="Input image">
+                            <div class="prediction"><img src="files/images/depth/depth_18_1.png" alt="Depth prediction">
+                            </div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Depth</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> Generate a metric depth map of the input
+                            image.</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="depth">
+                            <img src="files/images/depth/depth_eth3d_205_0.jpeg" alt="Input image">
+                            <div class="prediction"><img src="files/images/depth/depth_eth3d_205_1.png"
+                                    alt="Depth prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Depth</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> Generate a metric depth map of the input
+                            image.</div>
+                    </div>
+                </div>
+            </div>
+            <p class="reveal-hint">Hover to reveal depth maps</p>
+
+            <!-- Surface Normal Estimation -->
+            <h3 class="subsection-title">Surface Normal Estimation</h3>
+            <div class="carousel-container" id="carousel-normal">
+                <button class="carousel-btn prev" aria-label="Previous">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="carousel-btn next" aria-label="Next">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                <div class="carousel-track">
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="normal">
+                            <img src="files/images/normal/sn_1_in.jpg" alt="Input image">
+                            <div class="prediction"><img src="files/images/normal/sn_1_out.jpg" alt="Normal prediction">
+                            </div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Normal</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> Generate a surface normal map of the input
+                            image.</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="normal">
+                            <img src="files/images/normal/sn_2_in.jpg" alt="Input image">
+                            <div class="prediction"><img src="files/images/normal/sn_2_out.jpg" alt="Normal prediction">
+                            </div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Normal</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> Generate a surface normal map of the input
+                            image.</div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="reveal-card" data-task="normal">
+                            <img src="files/images/normal/sn_4_in.jpg" alt="Input image">
+                            <div class="prediction"><img src="files/images/normal/sn_4_out.png" alt="Normal prediction">
+                            </div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Normal</span>
+                        </div>
+                        <div class="reveal-caption"><strong>Prompt:</strong> Generate a surface normal map of the input
+                            image.</div>
+                    </div>
+                </div>
+            </div>
+            <p class="reveal-hint">Hover to reveal surface normal maps</p>
+        </div>
+    </section>
+
+    <!-- ===== RESULTS ===== -->
+    <section id="results">
+        <div class="container">
+            <h2 class="section-title">Results</h2>
+            <p class="section-desc">Vision Banana achieves state-of-the-art under the zero-shot transfer setting across
+                2D and 3D vision tasks.</p>
+
+            <!-- 2D Segmentation Charts -->
+            <h3 class="subsection-title" style="margin-top: 0;">2D Semantic Understanding</h3>
+
+            <!-- Cityscapes -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <span class="chart-title">Cityscapes (Semantic Segmentation)</span>
+                    <span class="chart-metric">mIoU ↑ Higher is better</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">SegMan-L<br><small style="color: #64748b;">(Non Zero-Shot)</small></span>
+                    <div class="bar-track">
+                        <div class="bar-fill non-zero-shot" style="width: 100%;">0.842</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">APE-D</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 52.5%;">0.442</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">OpenSeeD</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 56.7%;">0.478</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">X-Decoder</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 61.7%;">0.520</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">SAM 3</span>
+                    <div class="bar-track">
+                        <div class="bar-fill second" style="width: 77.4%;">0.652</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                style="height: 1.2em; vertical-align: middle;"></strong></span>
+                    <div class="bar-track">
+                        <div class="bar-fill highlight" style="width: 83.0%;">0.699</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SA-Co/Gold -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <span class="chart-title">SA-Co/Gold</span>
+                    <span class="chart-metric">pmF1 ↑ Higher is better</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">SAM 3<br><small style="color: #64748b;">(Non Zero-Shot)</small></span>
+                    <div class="bar-track">
+                        <div class="bar-fill non-zero-shot" style="width: 100%;">0.661</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">APE-D</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 55.8%;">0.369</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">OWLv2</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 63.5%;">0.420</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Gemini 2.5</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 69.7%;">0.461</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                style="height: 1.2em; vertical-align: middle;"></strong></span>
+                    <div class="bar-track">
+                        <div class="bar-fill highlight" style="width: 81.7%;">0.540</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">DINO-X</span>
+                    <div class="bar-track">
+                        <div class="bar-fill second" style="width: 83.5%;">0.552</div>
+                    </div>
+                </div>
+                <div class="chart-note">* Evaluated on 500 randomly sampled queries.</div>
+            </div>
+
+            <!-- RefCOCOg -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <span class="chart-title">RefCOCOg val (UMD)</span>
+                    <span class="chart-metric">cIoU ↑ Higher is better</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">X-SAM + Phi3<br><small style="color: #64748b;">(Non
+                            Zero-Shot)</small></span>
+                    <div class="bar-track">
+                        <div class="bar-fill non-zero-shot" style="width: 100%;">0.838</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">HyperSeg + Phi2<br><small style="color: #64748b;">(Non
+                            Zero-Shot)</small></span>
+                    <div class="bar-track">
+                        <div class="bar-fill non-zero-shot" style="width: 94.7%;">0.794</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">HybridGL</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 61.2%;">0.513</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Kang et al. + LLaVA</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 80.8%;">0.677</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">SAM 3 + Gemini 2.5</span>
+                    <div class="bar-track">
+                        <div class="bar-fill second" style="width: 87.6%;">0.734</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                style="height: 1.2em; vertical-align: middle;"></strong></span>
+                    <div class="bar-track">
+                        <div class="bar-fill highlight" style="width: 88.1%;">0.738</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ReasonSeg -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <span class="chart-title">ReasonSeg val</span>
+                    <span class="chart-metric">gIoU ↑ Higher is better</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">SegZero</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 78.9%;">0.626</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">RSVP + GPT-4o</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 81.6%;">0.647</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">SAM 3 Agent</span>
+                    <div class="bar-track">
+                        <div class="bar-fill second" style="width: 97.1%;">0.770</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                style="height: 1.2em; vertical-align: middle;"></strong></span>
+                    <div class="bar-track">
+                        <div class="bar-fill highlight" style="width: 100%;">0.793</div>
+                    </div>
+                </div>
+                <div class="chart-note">Methods paired with MLLMs for reasoning. Vision Banana uses Gemini 2.5 Pro.
+                </div>
+            </div>
+
+            <!-- 3D Understanding -->
+            <h3 class="subsection-title">3D Understanding</h3>
+
+            <!-- Depth -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <span class="chart-title">Monocular Metric Depth — Average Benchmarks</span>
+                    <span class="chart-metric">δ₁ ↑ Higher is better</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Depth Pro</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 81.1%;">0.715</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">MoGe-2</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 90.9%;">0.802</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">UniK3D</span>
+                    <div class="bar-track">
+                        <div class="bar-fill second" style="width: 93.3%;">0.823</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                style="height: 1.2em; vertical-align: middle;"></strong></span>
+                    <div class="bar-track">
+                        <div class="bar-fill highlight" style="width: 100%;">0.882</div>
+                    </div>
+                </div>
+                <div class="chart-note">Vision Banana achieves superior results without using camera intrinsics in
+                    neither training or inference.</div>
+            </div>
+
+            <!-- Surface Normal -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <span class="chart-title">Surface Normal Estimation — Average Indoor</span>
+                    <span class="chart-metric">Mean Angular Error (°) ↓ Lower is better</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                style="height: 1.2em; vertical-align: middle;"></strong></span>
+                    <div class="bar-track">
+                        <div class="bar-fill highlight" style="width: 79.3%;">15.55</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Lotus-2-Normal</span>
+                    <div class="bar-track">
+                        <div class="bar-fill second" style="width: 84.5%;">16.56</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">DSINE</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 86.8%;">17.02</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">StableNormal</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 87.6%;">17.17</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Marigold</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 100%;">19.61</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTRIBUTORS ===== -->
+    <section id="contributors" class="contributors-section">
+        <div class="container">
+            <h2 class="section-title">Contributors</h2>
+
+            <div class="contributor-group">
+                <div class="contributor-role">Project Leads</div>
+                <div class="contributor-names">
+                    <strong>Valentin Gabeur*</strong> &nbsp;·&nbsp;
+                    <strong>Shangbang Long*</strong> &nbsp;·&nbsp;
+                    <strong>Songyou Peng*</strong>
+                </div>
+                <div class="contributor-equal">* Equal contribution</div>
+            </div>
+
+            <div class="contributor-group">
+                <div class="contributor-role">Core Contributors</div>
+                <div class="contributor-names">
+                    Paul Voigtlaender &nbsp;·&nbsp;
+                    Shuyang Sun &nbsp;·&nbsp;
+                    Yanan Bao &nbsp;·&nbsp;
+                    Karen Truong &nbsp;·&nbsp;
+                    Zhicheng Wang &nbsp;·&nbsp;
+                    Wenlei Zhou &nbsp;·&nbsp;
+                    Jonathan T. Barron &nbsp;·&nbsp;
+                    Kyle Genova &nbsp;·&nbsp;
+                    Nithish Kannen &nbsp;·&nbsp;
+                    Sherry Ben &nbsp;·&nbsp;
+                    Yandong Li &nbsp;·&nbsp;
+                    Mandy Guo &nbsp;·&nbsp;
+                    Suhas Yogin
+                </div>
+            </div>
+
+            <div class="contributor-group">
+                <div class="contributor-role">Project Advisors</div>
+                <div class="contributor-names">
+                    Yiming Gu &nbsp;·&nbsp;
+                    Huizhong Chen
+                </div>
+            </div>
+
+            <div class="contributor-group">
+                <div class="contributor-role">Leadership Sponsors</div>
+                <div class="contributor-names">
+                    Oliver Wang &nbsp;·&nbsp;
+                    Saining Xie &nbsp;·&nbsp;
+                    Howard Zhou &nbsp;·&nbsp;
+                    Kaiming He &nbsp;·&nbsp;
+                    Tom Funkhouser &nbsp;·&nbsp;
+                    Jean-Baptiste Alayrac &nbsp;·&nbsp;
+                    Radu Soricut
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer"
+        style="text-align: center; padding: 40px 20px; background: #fff; border-top: 1px solid #f1f5f9;">
+        <div class="container">
+            <img src="files/images/gdm_logo.png" alt="Google DeepMind" style="height: 44px; margin-bottom: 16px;">
+        </div>
+    </footer>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // ---- Sticky nav shadow ----
+            const nav = document.getElementById('main-nav');
+            window.addEventListener('scroll', () => {
+                nav.classList.toggle('scrolled', window.scrollY > 10);
+            });
+
+            // ---- Carousel Functionality ----
+            document.querySelectorAll('.carousel-container').forEach(container => {
+                const track = container.querySelector('.carousel-track');
+                const items = container.querySelectorAll('.carousel-item');
+                const prevBtn = container.querySelector('.carousel-btn.prev');
+                const nextBtn = container.querySelector('.carousel-btn.next');
+
+                let currentIndex = 0;
+                const maxIndex = Math.max(0, items.length - 2); // 2 items visible
+
+                function updateCarousel() {
+                    if (items.length === 0) return;
+                    const itemWidth = items[0].getBoundingClientRect().width;
+                    const gap = 20; // Gap between items
+                    const amountToMove = (itemWidth + gap) * currentIndex;
+                    track.style.transform = `translateX(-${amountToMove}px)`;
+
+                    // Update button states
+                    if (prevBtn) prevBtn.disabled = currentIndex === 0;
+                    if (nextBtn) nextBtn.disabled = currentIndex >= maxIndex;
+                }
+
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', () => {
+                        if (currentIndex > 0) {
+                            currentIndex--;
+                            updateCarousel();
+                        }
+                    });
+                }
+
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', () => {
+                        if (currentIndex < maxIndex) {
+                            currentIndex++;
+                            updateCarousel();
+                        }
+                    });
+                }
+
+                // Initial state
+                updateCarousel();
+
+                // Update on resize
+                window.addEventListener('resize', updateCarousel);
+            });
+
+            // ---- Prompt Switching ----
+            document.querySelectorAll('.prompt-btn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation(); // Prevent triggering card hover/tap
+
+                    const item = this.closest('.carousel-item');
+                    const card = item.querySelector('.reveal-card');
+                    const predImg = card.querySelector('.prediction img');
+                    const caption = item.querySelector('.reveal-caption');
+
+                    // Update active button
+                    item.querySelectorAll('.prompt-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Update image and text
+                    const newImg = this.getAttribute('data-img');
+                    const newText = this.getAttribute('data-text');
+
+                    predImg.src = newImg;
+                    caption.innerHTML = '<strong>Prompt:</strong> ' + newText;
+                });
+            });
+
+            // ---- Active nav link on scroll ----
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            function updateActiveNav() {
+                const scrollY = window.scrollY + 100;
+                sections.forEach(section => {
+                    const top = section.offsetTop - 80;
+                    const bottom = top + section.offsetHeight;
+                    const id = section.getAttribute('id');
+                    if (scrollY >= top && scrollY < bottom) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === '#' + id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveNav, { passive: true });
+            updateActiveNav();
+
+            // ---- Mobile tap-to-toggle for reveal cards ----
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+            if (isTouchDevice) {
+                document.querySelectorAll('.reveal-card').forEach(card => {
+                    card.addEventListener('click', function (e) {
+                        this.classList.toggle('tapped');
+                    });
+                });
+                // Update hint text
+                document.querySelectorAll('.reveal-hint').forEach(hint => {
+                    hint.textContent = hint.textContent.replace('Hover', 'Tap');
+                });
+            }
+
+            // (BibTeX section removed)
+
+            // ---- Scroll-triggered fade-in ----
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+            // ---- Animate bar fills on scroll ----
+            const barObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const bars = entry.target.querySelectorAll('.bar-fill');
+                        bars.forEach((bar, i) => {
+                            const width = bar.style.width;
+                            bar.style.width = '0%';
+                            setTimeout(() => { bar.style.width = width; }, 80 * i);
+                        });
+                        barObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('.chart-card').forEach(card => barObserver.observe(card));
+        });
+    </script>
+
+</body>
+
+</html>
