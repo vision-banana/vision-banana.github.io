@@ -8,7 +8,8 @@
     <meta name="description"
         content="Vision Banana: A generalist model built by instruction-tuning Nano Banana Pro, achieving state-of-the-art on segmentation, depth, and surface normal tasks.">
     <meta property="og:title" content="Vision Banana | Google DeepMind">
-    <meta property="og:description" content="A generalist model achieving state-of-the-art on segmentation, depth, and surface normal tasks.">
+    <meta property="og:description"
+        content="A generalist model achieving state-of-the-art on segmentation, depth, and surface normal tasks.">
     <meta property="og:image" content="files/images/logo.png">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
@@ -189,7 +190,7 @@
             text-align: center;
             color: #334155;
             font-size: 1rem;
-            max-width: 640px;
+            max-width: 840px;
             margin: 0 auto 48px;
         }
 
@@ -304,7 +305,7 @@
             width: 100%;
             height: 100%;
             opacity: 0;
-            transition: opacity 0.8s ease;
+            transition: opacity 0.5s ease;
         }
 
         .reveal-card .prediction img {
@@ -477,77 +478,87 @@
             font-family: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
         }
 
-        /* ===== Bar Charts ===== */
+        /* ===== Bar Charts (Vertical) ===== */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
         .chart-card {
-            padding: 32px;
+            padding: 28px;
             border-radius: 16px;
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            margin-bottom: 24px;
         }
 
         .chart-header {
             display: flex;
-            justify-content: space-between;
-            align-items: baseline;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
             margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 8px;
+            gap: 4px;
         }
 
         .chart-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: #0f172a;
         }
 
         .chart-metric {
-            font-size: 0.78rem;
+            font-size: 0.72rem;
             color: #94a3b8;
             font-weight: 500;
         }
 
-        .bar-row {
+        .bar-group {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 8px;
+            height: 220px;
+            padding: 0 8px;
         }
 
-        .bar-label {
-            width: 160px;
-            min-width: 160px;
-            text-align: right;
-            font-size: 0.82rem;
+        .bar-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 88px;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .bar-value {
+            font-size: 0.68rem;
+            font-weight: 700;
             color: #475569;
-            font-weight: 500;
+            margin-bottom: 4px;
+            white-space: nowrap;
         }
 
         .bar-track {
-            flex: 1;
-            height: 30px;
+            width: 100%;
+            height: 0;
             background: #e2e8f0;
-            border-radius: 8px;
+            border-radius: 6px 6px 0 0;
             overflow: hidden;
             position: relative;
+            transition: height 0.8s ease;
         }
 
         .bar-fill {
+            width: 100%;
             height: 100%;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 10px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #fff;
+            border-radius: 6px 6px 0 0;
             background: #94a3b8;
-            transition: width 0.8s ease;
         }
 
         .bar-fill.highlight {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(180deg, #f59e0b, #d97706);
         }
 
         .bar-fill.second {
@@ -555,35 +566,66 @@
         }
 
         .bar-fill.non-zero-shot {
-            background: repeating-linear-gradient(
-                -45deg,
-                #e2e8f0,
-                #e2e8f0 4px,
-                #cbd5e1 4px,
-                #cbd5e1 8px
-            );
+            background: repeating-linear-gradient(-45deg,
+                    #e2e8f0,
+                    #e2e8f0 4px,
+                    #cbd5e1 4px,
+                    #cbd5e1 8px);
+        }
+
+        .bar-labels {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 0 8px;
+        }
+
+        .bar-label {
+            flex: 1;
+            max-width: 88px;
+            text-align: center;
+            font-size: 0.68rem;
             color: #475569;
+            font-weight: 500;
+            line-height: 1.3;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
         }
 
-        .bar-row.non-zs-row {
+        .bar-label.non-zs-label {
             opacity: 0.5;
-            padding-bottom: 14px;
-            margin-bottom: 14px;
-            border-bottom: 1px dashed #cbd5e1;
         }
 
-        .non-zs-group {
+        .bar-col.non-zs-col {
             opacity: 0.5;
-            padding-bottom: 14px;
-            margin-bottom: 14px;
-            border-bottom: 1px dashed #cbd5e1;
+        }
+
+        .bar-col.non-zs-col .bar-value {
+            color: #94a3b8;
+        }
+
+        .non-zs-divider {
+            width: 1px;
+            background: #cbd5e1;
+            align-self: stretch;
+            margin: 0 2px;
+            border-left: 1px dashed #cbd5e1;
+            background: none;
+        }
+
+        .non-zs-divider-label {
+            width: 1px;
+            margin: 0 2px;
         }
 
         .chart-note {
             margin-top: 12px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: #94a3b8;
             line-height: 1.5;
+            text-align: center;
         }
 
         /* ===== BibTeX ===== */
@@ -701,6 +743,12 @@
         }
 
         /* ===== Responsive ===== */
+        @media (max-width: 900px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero {
                 padding: 40px 20px 32px;
@@ -718,14 +766,12 @@
                 grid-template-columns: 1fr 1fr;
             }
 
-            .bar-label {
-                width: 100px;
-                min-width: 100px;
-                font-size: 0.75rem;
-            }
-
             .chart-card {
                 padding: 20px;
+            }
+
+            .bar-group {
+                height: 180px;
             }
 
             .nav-inner {
@@ -739,15 +785,26 @@
                 grid-template-columns: 1fr;
             }
 
-            .bar-row {
-                flex-direction: column;
-                align-items: flex-start;
+            .bar-group {
+                height: 160px;
                 gap: 4px;
             }
 
+            .bar-labels {
+                gap: 4px;
+            }
+
+            .bar-col {
+                max-width: 56px;
+            }
+
             .bar-label {
-                width: 100%;
-                text-align: left;
+                max-width: 56px;
+                font-size: 0.6rem;
+            }
+
+            .bar-value {
+                font-size: 0.6rem;
             }
 
             .tldr-grid {
@@ -1180,267 +1237,330 @@
     <section id="results">
         <div class="container">
             <h2 class="section-title">Results</h2>
-            <p class="section-desc">Vision Banana achieves state-of-the-art under the zero-shot transfer setting across
-                2D and 3D vision tasks.</p>
+            <p class="section-desc">Vision Banana achieves state-of-the-art under the <strong>zero-shot</strong>
+                transfer setting across 2D and 3D vision tasks.</p>
 
             <!-- 2D Segmentation Charts -->
-            <h3 class="subsection-title" style="margin-top: 0;">2D Semantic Understanding</h3>
+            <h3 class="subsection-title" style="margin-top: 0;">2D Understanding</h3>
+            
+            <div class="chart-grid">
 
-            <!-- Cityscapes -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <span class="chart-title">Cityscapes (Semantic Segmentation)</span>
-                    <span class="chart-metric">mIoU ↑ Higher is better</span>
-                </div>
-                <div class="non-zs-group">
-                    <div class="bar-row">
-                        <span class="bar-label">SegMan-L<br><small style="color: #64748b;">(Non Zero-Shot)</small></span>
-                        <div class="bar-track">
-                            <div class="bar-fill non-zero-shot" style="width: 100%;">0.842</div>
+                <!-- Cityscapes -->
+                <div class="chart-card fade-in">
+                    <div class="chart-header">
+                        <span class="chart-title">Cityscapes — Semantic Segmentation</span>
+                        <span class="chart-metric">mIoU ↑ Higher is better</span>
                         </div>
+                    <div class="bar-group">
+                        <div class="bar-col non-zs-col" data-height="100%">
+                            <div class="bar-value">0.842</div>
+                            <div class="bar-track">
+                                <div class="bar-fill non-zero-shot"></div>
+                                </div>
+                                </div>
+                        <div class="non-zs-divider"></div>
+                        <div class="bar-col" data-height="52.5%">
+                            <div class="bar-value">0.442</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="56.7%">
+                            <div class="bar-value">0.478</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="61.7%">
+                            <div class="bar-value">0.520</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="77.4%">
+                            <div class="bar-value">0.652</div>
+                            <div class="bar-track">
+                                <div class="bar-fill second"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="83.0%">
+                            <div class="bar-value" style="color: #d97706; font-weight: 800;">0.699</div>
+                            <div class="bar-track">
+                                <div class="bar-fill highlight"></div>
+                                </div>
+                                </div>
+                                </div>
+                    <div class="bar-labels">
+                        <span class="bar-label non-zs-label">SegMan-L<br><small style="color: #94a3b8;">(Non
+                                Zero-Shot)</small></span>
+                        <span style="width:1px; margin:0 2px;"></span>
+                        <span class="bar-label">APE-D</span>
+                        <span class="bar-label">OpenSeeD</span>
+                        <span class="bar-label">X-Decoder</span>
+                        <span class="bar-label">SAM 3</span>
+                        <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                    style="height: 1em; vertical-align: middle;"></strong></span>
                     </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">APE-D</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 52.5%;">0.442</div>
                     </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">OpenSeeD</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 56.7%;">0.478</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">X-Decoder</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 61.7%;">0.520</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">SAM 3</span>
-                    <div class="bar-track">
-                        <div class="bar-fill second" style="width: 77.4%;">0.652</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
-                                style="height: 1.2em; vertical-align: middle;"></strong></span>
-                    <div class="bar-track">
-                        <div class="bar-fill highlight" style="width: 83.0%;">0.699</div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- SA-Co/Gold -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <span class="chart-title">SA-Co/Gold</span>
-                    <span class="chart-metric">pmF1 ↑ Higher is better</span>
-                </div>
-                <div class="non-zs-group">
-                    <div class="bar-row">
-                        <span class="bar-label">SAM 3<br><small style="color: #64748b;">(Non Zero-Shot)</small></span>
-                        <div class="bar-track">
-                            <div class="bar-fill non-zero-shot" style="width: 100%;">0.661</div>
+                <!-- SA-Co/Gold -->
+                <div class="chart-card fade-in">
+                    <div class="chart-header">
+                        <span class="chart-title">SA-Co/Gold — Instance Segmentation</span>
+                        <span class="chart-metric">pmF1 ↑ Higher is better</span>
                         </div>
+                    <div class="bar-group">
+                        <div class="bar-col non-zs-col" data-height="100%">
+                            <div class="bar-value">0.661</div>
+                            <div class="bar-track">
+                                <div class="bar-fill non-zero-shot"></div>
+                                </div>
+                        </div>
+                        <div class="non-zs-divider"></div>
+                        <div class="bar-col" data-height="55.8%">
+                            <div class="bar-value">0.369</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                            </div>
+                            </div>
+                        <div class="bar-col" data-height="63.5%">
+                            <div class="bar-value">0.420</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="69.7%">
+                            <div class="bar-value">0.461</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="81.7%">
+                            <div class="bar-value" style="color: #d97706; font-weight: 800;">0.540</div>
+                            <div class="bar-track">
+                                <div class="bar-fill highlight"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="83.5%">
+                            <div class="bar-value">0.552</div>
+                            <div class="bar-track">
+                                <div class="bar-fill second"></div>
+                                </div>
+                                </div>
                     </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">APE-D</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 55.8%;">0.369</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">OWLv2</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 63.5%;">0.420</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">Gemini 2.5</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 69.7%;">0.461</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
-                                style="height: 1.2em; vertical-align: middle;"></strong></span>
-                    <div class="bar-track">
-                        <div class="bar-fill highlight" style="width: 81.7%;">0.540</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">DINO-X</span>
-                    <div class="bar-track">
-                        <div class="bar-fill second" style="width: 83.5%;">0.552</div>
-                    </div>
-                </div>
-                <div class="chart-note">* Evaluated on 500 randomly sampled queries.</div>
-            </div>
-
-            <!-- RefCOCOg -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <span class="chart-title">RefCOCOg val (UMD)</span>
-                    <span class="chart-metric">cIoU ↑ Higher is better</span>
-                </div>
-                <div class="non-zs-group">
-                    <div class="bar-row">
-                        <span class="bar-label">HyperSeg + Phi2<br><small style="color: #64748b;">(Non
+                    <div class="bar-labels">
+                        <span class="bar-label non-zs-label">SAM 3<br><small style="color: #94a3b8;">(Non
                                 Zero-Shot)</small></span>
-                        <div class="bar-track">
-                            <div class="bar-fill non-zero-shot" style="width: 94.7%;">0.794</div>
-                            </div>
-                            </div>
-                            <div class="bar-row">
-                        <span class="bar-label">X-SAM + Phi3<br><small style="color: #64748b;">(Non
-                                Zero-Shot)</small></span>
-                        <div class="bar-track">
-                            <div class="bar-fill non-zero-shot" style="width: 100%;">0.838</div>
-                            </div>
+                        <span style="width:1px; margin:0 2px;"></span>
+                        <span class="bar-label">APE-D</span>
+                        <span class="bar-label">OWLv2</span>
+                        <span class="bar-label">Gemini 2.5</span>
+                        <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                    style="height: 1em; vertical-align: middle;"></strong></span>
+                        <span class="bar-label">DINO-X</span>
                     </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">HybridGL</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 61.2%;">0.513</div>
+                    <div class="chart-note">* Evaluated on 500 randomly sampled queries.</div>
                     </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">Kang et al. + LLaVA</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 80.8%;">0.677</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">SAM 3 + Gemini 2.5</span>
-                    <div class="bar-track">
-                        <div class="bar-fill second" style="width: 87.6%;">0.734</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
-                                style="height: 1.2em; vertical-align: middle;"></strong></span>
-                    <div class="bar-track">
-                        <div class="bar-fill highlight" style="width: 88.1%;">0.738</div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- ReasonSeg -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <span class="chart-title">ReasonSeg val</span>
-                    <span class="chart-metric">gIoU ↑ Higher is better</span>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">SegZero</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 78.9%;">0.626</div>
+                <!-- RefCOCOg -->
+                <div class="chart-card fade-in">
+                    <div class="chart-header">
+                        <span class="chart-title">RefCOCOg val (UMD)</span>
+                        <span class="chart-metric">cIoU ↑ Higher is better</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar-col non-zs-col" data-height="94.7%">
+                            <div class="bar-value">0.794</div>
+                            <div class="bar-track">
+                                <div class="bar-fill non-zero-shot"></div>
+                            </div>
+                        </div>
+                        <div class="bar-col non-zs-col" data-height="100%">
+                            <div class="bar-value">0.838</div>
+                            <div class="bar-track">
+                                <div class="bar-fill non-zero-shot"></div>
+                            </div>
+                        </div>
+                        <div class="non-zs-divider"></div>
+                        <div class="bar-col" data-height="61.2%">
+                            <div class="bar-value">0.513</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                            </div>
+                            </div>
+                        <div class="bar-col" data-height="80.8%">
+                            <div class="bar-value">0.677</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="87.6%">
+                            <div class="bar-value">0.734</div>
+                            <div class="bar-track">
+                                <div class="bar-fill second"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="88.1%">
+                            <div class="bar-value" style="color: #d97706; font-weight: 800;">0.738</div>
+                            <div class="bar-track">
+                                <div class="bar-fill highlight"></div>
+                                </div>
+                                </div>
+                    </div>
+                    <div class="bar-labels">
+                        <span class="bar-label non-zs-label">HyperSeg<br>+ Phi2<br><small style="color: #94a3b8;">(Non
+                                Zero-Shot)</small></span>
+                        <span class="bar-label non-zs-label">X-SAM<br>+ Phi3<br><small style="color: #94a3b8;">(Non
+                                Zero-Shot)</small></span>
+                        <span style="width:1px; margin:0 2px;"></span>
+                        <span class="bar-label">HybridGL</span>
+                        <span class="bar-label">Kang<br>+ LLaVA</span>
+                        <span class="bar-label">SAM 3<br>+ Gemini 2.5 Pro</span>
+                        <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                    style="height: 1em; vertical-align: middle;"></strong><br>+ Gemini 2.5 Pro</span>
                     </div>
                 </div>
-                <div class="bar-row">
-                    <span class="bar-label">RSVP + GPT-4o</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 81.6%;">0.647</div>
+
+                <!-- ReasonSeg -->
+                <div class="chart-card fade-in">
+                    <div class="chart-header">
+                        <span class="chart-title">ReasonSeg val</span>
+                        <span class="chart-metric">gIoU ↑ Higher is better</span>
                     </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">SAM 3 Agent<br>+ Gemini 2.5 Pro</span>
-                    <div class="bar-track">
-                        <div class="bar-fill second" style="width: 97.1%;">0.770</div>
+                    <div class="bar-group">
+                        <div class="bar-col" data-height="78.9%">
+                            <div class="bar-value">0.626</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="81.6%">
+                            <div class="bar-value">0.647</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="97.1%">
+                            <div class="bar-value">0.770</div>
+                            <div class="bar-track">
+                                <div class="bar-fill second"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="100%">
+                            <div class="bar-value" style="color: #d97706; font-weight: 800;">0.793</div>
+                            <div class="bar-track">
+                                <div class="bar-fill highlight"></div>
+                                </div>
+                                </div>
                     </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
-                                style="height: 1.2em; vertical-align: middle;"></strong><br>+ Gemini 2.5 Pro</span>
-                    <div class="bar-track">
-                        <div class="bar-fill highlight" style="width: 100%;">0.793</div>
+                    <div class="bar-labels">
+                        <span class="bar-label">SegZero</span>
+                        <span class="bar-label">RSVP<br>+ GPT-4o</span>
+                        <span class="bar-label">SAM 3<br>+ Gemini 2.5 Pro</span>
+                        <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                    style="height: 1em; vertical-align: middle;"></strong><br>+ Gemini 2.5 Pro</span>
                     </div>
+                    <div class="chart-note">Methods paired with MLLMs for reasoning.</div>
                 </div>
-                <div class="chart-note">Methods paired with MLLMs for reasoning.
-                </div>
-            </div>
+
+            </div><!-- end chart-grid -->
 
             <!-- 3D Understanding -->
             <h3 class="subsection-title">3D Understanding</h3>
 
-            <!-- Depth -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <span class="chart-title">Metric Depth Prediction — Average Benchmarks</span>
-                    <span class="chart-metric">δ₁ ↑ Higher is better</span>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">Depth Pro</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 81.1%;">0.715</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">MoGe-2</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 90.9%;">0.802</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">UniK3D</span>
-                    <div class="bar-track">
-                        <div class="bar-fill second" style="width: 93.3%;">0.823</div>
-                    </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
-                                style="height: 1.2em; vertical-align: middle;"></strong></span>
-                    <div class="bar-track">
-                        <div class="bar-fill highlight" style="width: 100%;">0.882</div>
-                    </div>
-                </div>
-                <div class="chart-note">Vision Banana achieves superior results without using camera intrinsics in
-                    neither training or inference.</div>
-            </div>
+            <div class="chart-grid">
 
-            <!-- Surface Normal -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <span class="chart-title">Surface Normal Estimation — Average Benchmarks</span>
-                    <span class="chart-metric">Mean Angular Error (°) ↓ Lower is better</span>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">Marigold</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 100%;">19.61</div>
+                <!-- Depth -->
+                <div class="chart-card fade-in">
+                    <div class="chart-header">
+                        <span class="chart-title">Metric Depth — Average Benchmarks</span>
+                        <span class="chart-metric">δ₁ ↑ Higher is better</span>
+                        </div>
+                    <div class="bar-group">
+                        <div class="bar-col" data-height="40.8%">
+                            <div class="bar-value">0.715</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="71.6%">
+                            <div class="bar-value">0.802</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="79.1%">
+                            <div class="bar-value">0.823</div>
+                            <div class="bar-track">
+                                <div class="bar-fill second"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="100%">
+                            <div class="bar-value" style="color: #d97706; font-weight: 800;">0.882</div>
+                            <div class="bar-track">
+                                <div class="bar-fill highlight"></div>
+                                </div>
+                        </div>
                     </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">StableNormal</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 87.6%;">17.17</div>
+                    <div class="bar-labels">
+                        <span class="bar-label">Depth Pro</span>
+                        <span class="bar-label">MoGe-2</span>
+                        <span class="bar-label">UniK3D</span>
+                        <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                    style="height: 1em; vertical-align: middle;"></strong></span>
                     </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">DSINE</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width: 86.8%;">17.02</div>
+                    <div class="chart-note">Vision Banana does not use camera intrinsics in training or inference.</div>
                     </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label">Lotus-2-Normal</span>
-                    <div class="bar-track">
-                        <div class="bar-fill second" style="width: 84.5%;">16.56</div>
+
+                <!-- Surface Normal -->
+                <div class="chart-card fade-in">
+                    <div class="chart-header">
+                        <span class="chart-title">Surface Normal — Average Benchmarks</span>
+                        <span class="chart-metric">Mean Angular Error (°) ↓ Lower is better</span>
+                        </div>
+                    <div class="bar-group">
+                        <div class="bar-col" data-height="100%">
+                            <div class="bar-value">19.61</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="87.6%">
+                            <div class="bar-value">17.17</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="86.8%">
+                            <div class="bar-value">17.02</div>
+                            <div class="bar-track">
+                                <div class="bar-fill"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="84.5%">
+                            <div class="bar-value">16.56</div>
+                            <div class="bar-track">
+                                <div class="bar-fill second"></div>
+                                </div>
+                                </div>
+                        <div class="bar-col" data-height="79.3%">
+                            <div class="bar-value" style="color: #d97706; font-weight: 800;">15.55</div>
+                            <div class="bar-track">
+                                <div class="bar-fill highlight"></div>
+                                </div>
+                        </div>
+                        </div>
+                    <div class="bar-labels">
+                        <span class="bar-label">Marigold</span>
+                        <span class="bar-label">StableNormal</span>
+                        <span class="bar-label">DSINE</span>
+                        <span class="bar-label">Lotus-2</span>
+                        <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
+                                    style="height: 1em; vertical-align: middle;"></strong></span>
                     </div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label"><strong>Vision Banana <img src="files/images/logo.png" alt="🍌"
-                                style="height: 1.2em; vertical-align: middle;"></strong></span>
-                    <div class="bar-track">
-                        <div class="bar-fill highlight" style="width: 79.3%;">15.55</div>
                     </div>
-                </div>
-            </div>
+                    
+                    </div><!-- end chart-grid -->
         </div>
     </section>
 
@@ -1448,7 +1568,7 @@
     <section id="contributors" class="contributors-section">
         <div class="container">
             <h2 class="section-title">Contributors</h2>
-
+            <br>
             <div class="contributor-group">
                 <div class="contributor-role">Project Leads</div>
                 <div class="contributor-names">
@@ -1493,18 +1613,22 @@
                     Saining Xie &nbsp;·&nbsp;
                     Howard Zhou &nbsp;·&nbsp;
                     Kaiming He &nbsp;·&nbsp;
-                    Tom Funkhouser &nbsp;·&nbsp;
+                    Thomas Funkhouser &nbsp;·&nbsp;
                     Jean-Baptiste Alayrac &nbsp;·&nbsp;
                     Radu Soricut
                 </div>
             </div>
 
-            <div class="acknowledgements" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; text-align: center; max-width: 1000px; margin-left: auto; margin-right: auto;">
-                <div style="font-size: 0.95rem; font-weight: 600; color: #334155; margin-bottom: 8px;">Acknowledgements</div>
+            <div class="acknowledgements"
+                style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; text-align: center; max-width: 1000px; margin-left: auto; margin-right: auto;">
+                <div style="font-size: 0.95rem; font-weight: 600; color: #334155; margin-bottom: 8px;">Acknowledgements
+                </div>
                 <p style="font-size: 0.85rem; color: #64748b; line-height: 1.7; margin: 0;">
                     We thank
                     Xi Chen, Fei Xia,
-                    Kaushik Shivakumar, Abhishek Sinha, Phillip Lippe, Yilin Gao, Javier Rey, Sanghyun Woo, Renshen Wang, Wentao Yuan, Keran Rong, Rundi Wu, Manoj Kumar, Manli Shu, Francesco Piccinno, Ishita Dasgupta, Benigno Uria, Miki Rubinstein, Aäron van den Oord, Jon Shlens
+                    Kaushik Shivakumar, Abhishek Sinha, Phillip Lippe, Yilin Gao, Javier Rey, Sanghyun Woo, Renshen
+                    Wang, Wentao Yuan, Keran Rong, Rundi Wu, Manoj Kumar, Manli Shu, Francesco Piccinno, Ishita
+                    Dasgupta, Benigno Uria, Miki Rubinstein, Aäron van den Oord, and Jon Shlens
                     for their helpful discussions, advice, and technical guidance.
                 </p>
             </div>
@@ -1651,15 +1775,17 @@
 
             document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-            // ---- Animate bar fills on scroll ----
+            // ---- Animate vertical bar heights on scroll ----
             const barObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        const bars = entry.target.querySelectorAll('.bar-fill');
-                        bars.forEach((bar, i) => {
-                            const width = bar.style.width;
-                            bar.style.width = '0%';
-                            setTimeout(() => { bar.style.width = width; }, 80 * i);
+                        const cols = entry.target.querySelectorAll('.bar-col');
+                        cols.forEach((col, i) => {
+                            const track = col.querySelector('.bar-track');
+                            if (!track) return;
+                            const targetHeight = col.getAttribute('data-height') || '0%';
+                            track.style.height = '0%';
+                            setTimeout(() => { track.style.height = targetHeight; }, 80 * i);
                         });
                         barObserver.unobserve(entry.target);
                     }
