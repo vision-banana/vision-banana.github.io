@@ -304,6 +304,7 @@
             left: 0;
             width: 100%;
             height: 100%;
+            background: #ffffff;
             opacity: 0;
             transition: opacity 0.5s ease;
         }
@@ -1134,6 +1135,16 @@
                     </div>
                     <div class="carousel-item">
                         <div class="reveal-card" data-task="depth">
+                            <img src="files/images/depth_banana_0.jpg" alt="Input image">
+                            <div class="prediction"><img src="files/images/depth_banana_1.png" alt="Depth prediction"></div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Depth</span>
+                            </div>
+                            <div class="reveal-caption"><strong>Prompt:</strong> Generate a metric depth map of the provided
+                                image.</div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="reveal-card" data-task="depth">
                             <img src="files/images/depth/depth_eth3d_47_0.jpg" alt="Input image">
                             <div class="prediction"><img src="files/images/depth/depth_eth3d_47_1.jpg"
                                     alt="Depth prediction"></div>
@@ -1196,6 +1207,16 @@
                 <div class="carousel-track">
                     <div class="carousel-item">
                         <div class="reveal-card" data-task="normal">
+                            <img src="files/images/normal_jazz_0.jpg" alt="Input image">
+                            <div class="prediction"><img src="files/images/normal_jazz_1.png" alt="Surface Normal prediction">
+                            </div>
+                            <span class="reveal-label input-label">Input</span>
+                            <span class="reveal-label pred-label">Surface Normal</span>
+                            </div>
+                            <div class="reveal-caption"><strong>Prompt:</strong> Predict the surface normal of this scene.</div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="reveal-card" data-task="normal">
                             <img src="files/images/normal/sn_1_in.jpg" alt="Input image">
                             <div class="prediction"><img src="files/images/normal/sn_1_out.jpg" alt="Surface Normal prediction">
                             </div>
