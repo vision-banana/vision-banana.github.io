@@ -1728,12 +1728,21 @@
             // ---- Carousel Functionality ----
             document.querySelectorAll('.carousel-container').forEach(container => {
                 const track = container.querySelector('.carousel-track');
-                const items = container.querySelectorAll('.carousel-item');
+
+                // Shuffle carousel items (Fisher-Yates) for random order on each page load
+                const itemsArray = Array.from(track.querySelectorAll('.carousel-item'));
+                for (let i = itemsArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    track.appendChild(itemsArray[j]);
+                    itemsArray[j] = itemsArray[i];
+                }
+
+                const items = track.querySelectorAll('.carousel-item');
                 const prevBtn = container.querySelector('.carousel-btn.prev');
                 const nextBtn = container.querySelector('.carousel-btn.next');
 
-                let currentIndex = 0; // Start with middle item active
-                const maxIndex = Math.max(0, items.length - 1); // Only 1 item active/centered
+                let currentIndex = 0;
+                const maxIndex = Math.max(0, items.length - 1);
 
                 function updateCarousel() {
                     if (items.length === 0) return;
