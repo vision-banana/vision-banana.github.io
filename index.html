@@ -216,6 +216,9 @@
             background: #f8fafc;
             border: 2px solid #c2cedd;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 18px;
         }
 
         .tldr-card:hover {
@@ -224,8 +227,9 @@
         }
 
         .tldr-icon {
-            font-size: 1.5rem;
-            margin-bottom: 12px;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            line-height: 1;
         }
 
         .tldr-text {
@@ -881,8 +885,8 @@
                     <div class="tldr-icon">🏆</div>
                     <div class="tldr-text">Vision Banana is a SOTA unified model for both image understanding and
                         generation.</div>
-                    </div>
-                    <div class="tldr-card">
+                </div>
+                <div class="tldr-card">
                     <div class="tldr-icon">🧠</div>
                     <div class="tldr-text">Generative vision pretraining is an effective paradigm for visual understanding.</div>
                 </div>
