@@ -658,8 +658,10 @@
             font-size: 0.82rem;
             color: #334155;
             white-space: pre-wrap;
-            word-break: break-all;
+            overflow-wrap: break-word;
+            word-break: normal;
             line-height: 1.6;
+            text-align: left;
         }
 
         .copy-btn {
@@ -1743,6 +1745,30 @@
                     for their helpful discussions, advice, and technical guidance.
                 </p>
             </div>
+<!-- BibTeX -->
+<div style="margin-top: 40px; text-align: center; max-width: 1000px; margin-left: auto; margin-right: auto;">
+    <div style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-bottom: 16px;">BibTeX</div>
+    <div class="bibtex-card">
+        <button class="copy-btn" id="copy-bibtex" aria-label="Copy BibTeX">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+        </button>
+        <pre id="bibtex-text">@article{visionbanana2025,
+  title={Image Generators are Generalist Vision Learners},
+  author={Gabeur, Valentin and Long, Shangbang and Peng, Songyou
+          and Voigtlaender, Paul and Sun, Shuyang and Bao, Yanan
+          and Truong, Karen and Wang, Zhicheng and Zhou, Wenlei
+          and Barron, Jonathan T. and Genova, Kyle and Kannen,
+          Nithish and Ben, Sherry and Li, Yandong and Guo, Mandy
+          and Yogin, Suhas},
+  journal={arXiv preprint arXiv:XXXX.XXXXX},
+  year={2025}
+}</pre>
+    </div>
+</div>
         </div>
     </section>
 
@@ -1903,7 +1929,17 @@
                 });
             }
 
-            // (BibTeX section removed)
+            // ---- BibTeX copy button ----
+            const copyBtn = document.getElementById('copy-bibtex');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', () => {
+                    const bibtexText = document.getElementById('bibtex-text').textContent;
+                    navigator.clipboard.writeText(bibtexText).then(() => {
+                        copyBtn.classList.add('copied');
+                        setTimeout(() => copyBtn.classList.remove('copied'), 2000);
+                    });
+                });
+            }
 
             // ---- Scroll-triggered fade-in ----
             const observer = new IntersectionObserver((entries) => {
