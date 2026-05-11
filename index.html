@@ -959,6 +959,72 @@
             background: #f8fafc;
         }
 
+        /* ===== Measure Mode ===== */
+
+        .pc-distance-overlay {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            white-space: nowrap;
+            pointer-events: auto;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .pc-distance-overlay.visible {
+            display: flex;
+        }
+
+        .pc-distance-overlay .dist-icon {
+            font-size: 1.1rem;
+        }
+
+        .pc-distance-overlay .dist-value {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #fbbf24;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .pc-distance-overlay .dist-unit {
+            font-weight: 500;
+            color: #94a3b8;
+            font-size: 0.78rem;
+        }
+
+        .pc-distance-overlay .dist-clear {
+            padding: 3px 10px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.08);
+            color: #cbd5e1;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .pc-distance-overlay .dist-clear:hover {
+            background: rgba(255,255,255,0.18);
+            color: #fff;
+        }
+
+
+
         @media (max-width: 768px) {
             .pointcloud-canvas-wrap {
                 aspect-ratio: 1 / 1;
@@ -1412,6 +1478,13 @@
                         <div class="pointcloud-loading-text">Loading point cloud…</div>
                     </div>
                 </div>
+                <!-- Distance measurement overlay -->
+                <div class="pc-distance-overlay" id="pc-distance-overlay">
+                    <span class="dist-icon">📏</span>
+                    <span class="dist-value" id="pc-dist-value">—</span>
+                    <span class="dist-unit">meters</span>
+                    <button class="dist-clear" id="pc-dist-clear">Clear</button>
+                </div>
                 <div class="pointcloud-controls">
                     <button class="pc-btn active" data-pc="nyu_500" id="pc-btn-nyu500">NYU 1</button>
                     <button class="pc-btn" data-pc="nyu_162" id="pc-btn-nyu162">NYU 2</button>
@@ -1424,7 +1497,7 @@
                     <button class="pc-btn" id="pc-btn-reset">↺ Reset view</button>
                 </div>
             </div>
-            <p class="reveal-hint">Drag to orbit · Scroll to zoom · Right-click to pan</p>
+            <p class="reveal-hint">Drag to orbit · Scroll to zoom · Right-click to pan · ⌘/Ctrl+Click to measure</p>
 
             <!-- Surface Normal Estimation -->
             <h3 class="subsection-title">Surface Normal Estimation</h3>
@@ -2317,6 +2390,137 @@
             document.getElementById('pc-btn-reset').addEventListener('click', () => {
                 if (!controls || !currentPoints) return;
                 resetCamera(currentPoints.geometry.boundingSphere.radius);
+            });
+
+            // ---- Distance Measurement (Ctrl/Cmd + Click) ----
+            const distOverlay = document.getElementById('pc-distance-overlay');
+            const distValueEl = document.getElementById('pc-dist-value');
+            const distClearBtn = document.getElementById('pc-dist-clear');
+
+            let selectedPoints = [];        // [{position: THREE.Vector3}]
+            let measureMarkers = [];        // THREE.Mesh[]
+            let measureLine = null;         // THREE.Line
+
+            const raycaster = new THREE.Raycaster();
+            raycaster.params.Points.threshold = 0.05; // will be adjusted per-scene
+
+            function clearMeasurement() {
+                selectedPoints = [];
+                measureMarkers.forEach(m => { scene.remove(m); m.geometry.dispose(); m.material.dispose(); });
+                measureMarkers = [];
+                if (measureLine) { scene.remove(measureLine); measureLine.geometry.dispose(); measureLine.material.dispose(); measureLine = null; }
+                distOverlay.classList.remove('visible');
+                distValueEl.textContent = '—';
+            }
+
+            function createMarker(pos, color) {
+                const geom = new THREE.SphereGeometry(0.02, 16, 16);
+                const mat = new THREE.MeshBasicMaterial({ color, depthTest: false, transparent: true, opacity: 0.9 });
+                const mesh = new THREE.Mesh(geom, mat);
+                mesh.position.copy(pos);
+                mesh.renderOrder = 999;
+                // Scale marker relative to scene
+                if (currentPoints) {
+                    const r = currentPoints.geometry.boundingSphere.radius;
+                    const s = r * 0.02;
+                    mesh.scale.setScalar(s / 0.02);
+                }
+                scene.add(mesh);
+                measureMarkers.push(mesh);
+                return mesh;
+            }
+
+            function drawLine(p1, p2) {
+                if (measureLine) { scene.remove(measureLine); measureLine.geometry.dispose(); measureLine.material.dispose(); }
+                const geom = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+                const mat = new THREE.LineDashedMaterial({
+                    color: 0x3b82f6,
+                    dashSize: 0.05,
+                    gapSize: 0.03,
+                    linewidth: 2,
+                    depthTest: false,
+                    transparent: true,
+                    opacity: 0.85,
+                });
+                measureLine = new THREE.Line(geom, mat);
+                measureLine.computeLineDistances();
+                measureLine.renderOrder = 998;
+                // Scale dash sizes to scene
+                if (currentPoints) {
+                    const r = currentPoints.geometry.boundingSphere.radius;
+                    mat.dashSize = r * 0.015;
+                    mat.gapSize = r * 0.008;
+                    measureLine.computeLineDistances();
+                }
+                scene.add(measureLine);
+            }
+
+            function onCanvasClick(e) {
+                // Only respond to Ctrl+Click (Windows/Linux) or Cmd+Click (Mac)
+                if (!(e.ctrlKey || e.metaKey)) return;
+                if (!currentPoints || !renderer) return;
+
+                // Prevent OrbitControls from interpreting this as a pan/rotate
+                e.stopPropagation();
+
+                const rect = renderer.domElement.getBoundingClientRect();
+                const mouse = new THREE.Vector2(
+                    ((e.clientX - rect.left) / rect.width) * 2 - 1,
+                    -((e.clientY - rect.top) / rect.height) * 2 + 1
+                );
+
+                // Adjust raycaster threshold based on point size & scene scale
+                const r = currentPoints.geometry.boundingSphere.radius;
+                raycaster.params.Points.threshold = r * 0.015;
+
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObject(currentPoints);
+                if (intersects.length === 0) return;
+
+                const hit = intersects[0];
+
+                if (selectedPoints.length >= 2) {
+                    clearMeasurement();
+                }
+
+                const pos = hit.point.clone();
+                selectedPoints.push({ position: pos });
+
+                // First point = cyan, second = magenta
+                const color = selectedPoints.length === 1 ? 0x22d3ee : 0xf472b6;
+                createMarker(pos, color);
+
+                if (selectedPoints.length === 2) {
+                    const p1 = selectedPoints[0].position;
+                    const p2 = selectedPoints[1].position;
+
+                    drawLine(p1, p2);
+
+                    const dist = p1.distanceTo(p2);
+                    // Format nicely: use m for >= 1m, cm for < 1m
+                    if (dist >= 1) {
+                        distValueEl.textContent = dist.toFixed(3);
+                    } else {
+                        distValueEl.textContent = (dist * 100).toFixed(1);
+                    }
+                    distOverlay.querySelector('.dist-unit').textContent = dist >= 1 ? 'meters' : 'cm';
+                    distOverlay.classList.add('visible');
+                }
+            }
+
+            // Clear button
+            distClearBtn.addEventListener('click', () => {
+                clearMeasurement();
+            });
+
+            // Listen for Ctrl/Cmd+Click on the canvas
+            container.addEventListener('click', onCanvasClick);
+
+            // Clean up measurement when switching scenes
+            document.querySelectorAll('[data-pc]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    clearMeasurement();
+                });
             });
 
             // Lazy init + visibility tracking
