@@ -1413,8 +1413,12 @@
                     </div>
                 </div>
                 <div class="pointcloud-controls">
-                    <button class="pc-btn active" data-pc="nyu_162" id="pc-btn-nyu162">Scene 1</button>
-                    <button class="pc-btn" data-pc="nyu_200" id="pc-btn-nyu200">Scene 2</button>
+                    <button class="pc-btn active" data-pc="nyu_500" id="pc-btn-nyu500">NYU 1</button>
+                    <button class="pc-btn" data-pc="nyu_162" id="pc-btn-nyu162">NYU 2</button>
+                    <button class="pc-btn" data-pc="nyu_200" id="pc-btn-nyu200">NYU 3</button>
+                    <button class="pc-btn" data-pc="eth3d_20" id="pc-btn-eth3d20">ETH3D 1</button>
+                    <button class="pc-btn" data-pc="eth3d_110" id="pc-btn-eth3d110">ETH3D 2</button>
+                    <button class="pc-btn" data-pc="eth3d_205" id="pc-btn-eth3d205">ETH3D 3</button>
                     <div class="pc-divider"></div>
                     <button class="pc-btn active" id="pc-btn-rotate">⟳ Auto-rotate</button>
                     <button class="pc-btn" id="pc-btn-reset">↺ Reset view</button>
@@ -2156,8 +2160,12 @@
             if (!viewer || !container) return;
 
             const FILES = {
+                'nyu_500': 'files/pointcloud/nyu_500.bin',
                 'nyu_162': 'files/pointcloud/nyu_162.bin',
                 'nyu_200': 'files/pointcloud/nyu_200.bin',
+                'eth3d_20': 'files/pointcloud/eth3d_20.bin',
+                'eth3d_110': 'files/pointcloud/eth3d_110.bin',
+                'eth3d_205': 'files/pointcloud/eth3d_205.bin',
             };
 
             let scene, camera, renderer, controls;
@@ -2212,7 +2220,7 @@
                 animate();
 
                 // Load the default point cloud
-                showPointCloud('nyu_162');
+                showPointCloud('nyu_500');
             }
 
             async function loadPointCloud(name) {
